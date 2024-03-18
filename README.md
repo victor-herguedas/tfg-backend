@@ -6,7 +6,13 @@
 ### Dependences
 - Docker
 - Docker-compose
-- Node.js
+- Node.js 20.*.*
+
+### Install the project
+- Clone the repository
+- ```bash
+  $ npm install
+  ```
 
 ### Start the project
 #### Development
