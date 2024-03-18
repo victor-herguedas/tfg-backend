@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  node-backend:
+    image: node:20
+    working_dir: /app
+    command: ["npm", "run", "dev"]
+    ports:
+      - "5173:5173"
+    volumes:
+      - type: bind
+        source: .
+        target: /app 
+    tty: true
