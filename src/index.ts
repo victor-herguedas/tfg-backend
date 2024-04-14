@@ -3,3 +3,4 @@ export const getHello = (name: string): string => {
 }
 
 console.log(getHello('World'))
+console.log("Prueba")
