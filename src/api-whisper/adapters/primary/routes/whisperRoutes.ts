@@ -3,6 +3,7 @@ import { postWhisper } from '../controllers/postWhisperController.js'
 
 const router = Router()
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/', postWhisper)
 
 // TODO
