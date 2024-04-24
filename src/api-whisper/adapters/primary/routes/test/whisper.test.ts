@@ -11,7 +11,7 @@ describe('whisper routes integration test', () => {
     expect(res.status !== 404).toBeTruthy()
   })
 
-  test('It should accept mp3 files called audio', async () => {
+  test('it should accept mp3 files called audio', async () => {
     const res = await req(app)
       .post('/whisper')
       .attach('audio', path.join(__dirname, 'test-files', 'test.mp3'))
@@ -19,7 +19,7 @@ describe('whisper routes integration test', () => {
     expect(res.status).toBe(201)
   })
 
-  test('It should not accept not mp3 files called audio', async () => {
+  test('it should not accept not mp3 files called audio', async () => {
     const res = await req(app)
       .post('/whisper')
       .attach('audio', path.join(__dirname, 'test-files', 'test.gif'))
@@ -27,14 +27,14 @@ describe('whisper routes integration test', () => {
     expect(res.status).toBe(400)
   })
 
-  test('If audio is not send it should fail', async () => {
+  test('if audio is not send it should fail', async () => {
     const res = await req(app)
       .post('/whisper')
 
     expect(res.status).toBe(400)
   })
 
-  test('It should not accept files bigger than 25 mb', async () => {
+  test('it should not accept files bigger than 25 mb', async () => {
     const res = await req(app)
       .post('/whisper')
       .attach('file', path.join(__dirname, 'test-files', 'long-audio.mp3'))
@@ -42,5 +42,7 @@ describe('whisper routes integration test', () => {
     expect(res.status).toBe(400)
   })
 
-  // Debe devolver un texto con la transcripción realizada
+  // test('it should return')
+
+  // Debe devolver un socket para esperar a recibir la petición de que se está procesando
 })
