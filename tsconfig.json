@@ -9,9 +9,9 @@
     "target": "es2022",
 
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // },
 
     "outDir": "./dist",
     "strict": true,

@@ -1,5 +1,7 @@
 import { describe, test, beforeEach, expect } from 'vitest'
 import { type FormFile, checkIsCorrectFileMimeType, checkIsCorrectFileSize } from './audioSerialization.js'
+import { NotSupportedFileTypeError } from '../errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
+import { NotSupportedFileSizeError } from '../errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
 // import formidable from 'formidable'
 // import { getAudioFileFromRequest } from './audioSerialization.js'
 
@@ -29,7 +31,7 @@ describe('checkIsCorrectFileMimeType', () => {
     file.mimetype = 'application/pdf'
 
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    expect(() => checkIsCorrectFileMimeType(file)).toThrowError()
+    expect(() => checkIsCorrectFileMimeType(file)).toThrowError(NotSupportedFileTypeError)
   })
 })
 
@@ -46,7 +48,7 @@ describe('checkIsCorrectFileSize', () => {
     file.size = 25 * 1024 * 1026
 
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    expect(() => checkIsCorrectFileSize(file)).toThrowError()
+    expect(() => checkIsCorrectFileSize(file)).toThrowError(NotSupportedFileSizeError)
   })
 })
 

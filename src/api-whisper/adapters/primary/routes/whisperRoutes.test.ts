@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import { expect, describe, test, vi } from 'vitest'
 import req from 'supertest'
-import app from '@/index.js'
 import path from 'path'
-import { MEDIA_PATH } from '@/utilities/environment.js'
+import app from '../../../../index.js'
+import { MEDIA_PATH } from '../../../../utilities/environment.js'
+import { NotSupportedFileTypeErrorType } from '../../../../utilities/errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
+import { NotSupportedFileSizeErrorType } from '../../../../utilities/errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
 
 vi.mock('../../../domain/services/whisperService.ts', async (importOriginal) => {
   const mod = await importOriginal<typeof import('../../../domain/services/whisperService.js')>()
@@ -38,6 +40,7 @@ describe('whisper routes integration test', () => {
       .attach('audio', path.join(testFilesRoute, 'test.gif'))
 
     expect(res.status).toBe(400)
+    expect(res.body.type).toBe(NotSupportedFileTypeErrorType)
   })
 
   test('if audio is not send it should fail', async () => {
@@ -50,9 +53,10 @@ describe('whisper routes integration test', () => {
   test('it should not accept files bigger than 25 mb', async () => {
     const res = await req(app)
       .post('/whisper')
-      .attach('file', path.join(testFilesRoute, 'long-audio.mp3'))
+      .attach('audio', path.join(testFilesRoute, 'long-audio.mp3'))
 
     expect(res.status).toBe(400)
+    expect(res.body.type).toBe(NotSupportedFileSizeErrorType)
   })
 
   test('it should return a test transcribed from whisper', async () => {

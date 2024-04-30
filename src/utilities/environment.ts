@@ -1,5 +1,6 @@
 import 'dotenv/config'
-import path from 'path'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
 
 const envExceptionError = (envVariable: string): string => {
   return `${envVariable} not defined`
@@ -21,4 +22,6 @@ const paidTest = process.env.PAID_TEST
 if (paidTest === undefined) throw new Error(envExceptionError('PAID_TEST'))
 export const PAID_TEST: boolean = paidTest === 'true'
 
-export const MEDIA_PATH = path.join(__dirname, '..', '..', 'media')
+const fileName = fileURLToPath(import.meta.url)
+const dirName = dirname(fileName)
+export const MEDIA_PATH = path.join(dirName, '..', '..', 'media')

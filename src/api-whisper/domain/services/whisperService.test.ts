@@ -1,7 +1,7 @@
-import { MEDIA_PATH, PAID_TEST } from '@/utilities/environment.js'
 import { describe, expect, test } from 'vitest'
 import { whisperTranscribe } from './whisperService.js'
 import path from 'path'
+import { MEDIA_PATH, PAID_TEST } from '../../../utilities/environment.js'
 
 describe('whisper openAi api', () => {
   if (PAID_TEST) {
@@ -12,6 +12,8 @@ describe('whisper openAi api', () => {
   }
 
   test('unitary whisper', () => {
+    // vi.doMock()
     throw new Error('debe mockear openAI')
+    // vi.doUnmock()
   })
 })
