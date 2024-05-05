@@ -183,6 +183,7 @@ describe('mockedTests', () => {
     vi.resetAllMocks()
     expect(getApples()).toBe(undefined)
 
+    // esta no es un spy por lo que vuevle a la vi.fn original
     vi.restoreAllMocks()
     expect(getApples()).toBe(5)
   })
