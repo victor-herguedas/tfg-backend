@@ -7,8 +7,10 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
+    "bench": "vitest bench",
     "start": "node dist/src/index.js",
     "dev": "nodemon",
+    "coverage": "vitest run --coverage",
     "dev2": "node --loader ts-node/esm -r tsconfig-paths/register src/index.ts",
     "build-test": "vitest --run",
     "docker-dev": "docker-compose -f docker-compose-dev.yml up --build",
@@ -20,6 +22,7 @@
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.28",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@vitest/coverage-v8": "^1.5.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",

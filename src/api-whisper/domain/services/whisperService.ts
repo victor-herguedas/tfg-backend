@@ -11,7 +11,6 @@ export const whisperTranscribe = async (filePath: string): Promise<string> => {
     })
     return transcription.text
   } catch (e: any) {
-    // throw new OpenAiApiError('whisper')
     throw new OpenAiApiError('whisper' + e.message as unknown as string)
   }
 }

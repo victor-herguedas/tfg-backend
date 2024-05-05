@@ -8,6 +8,9 @@ export default defineConfig({
   test: {
     // silent: false
     // ...
+    coverage: {
+      provider: 'v8'
+    }
   },
   resolve: {
     alias: {
