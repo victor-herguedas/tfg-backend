@@ -1,13 +1,29 @@
-import { describe, test, beforeEach, expect } from 'vitest'
-import { type FormFile, checkIsCorrectFileMimeType, checkIsCorrectFileSize } from './audioSerialization.js'
+import { describe, test, beforeEach, expect, vi, afterEach } from 'vitest'
+import { type FormFile, checkIsCorrectFileMimeType, checkIsCorrectFileSize, getAudioFileFromRequest } from './audioSerialization.js'
 import { NotSupportedFileTypeError } from '../errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
 import { NotSupportedFileSizeError } from '../errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
-// import { type Request } from 'express'
-// import formidable from 'formidable'
-// import formidable from 'formidable'
-// import { getAudioFileFromRequest } from './audioSerialization.js'
+import { type Request } from 'express'
+import { ParsingError } from '../errors/ParsingError/ParsingError.js'
+import { MissingFileError } from '../errors/MissingFileError/MissingFileError.js'
 
 let motherFile: FormFile
+
+const mocks = vi.hoisted(() => {
+  return {
+    parseMockFun: vi.fn()
+  }
+})
+
+vi.mock('formidable', async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const original = await importOriginal<typeof import('formidable')>()
+  return ({
+    ...original,
+    default: () => ({
+      parse: mocks.parseMockFun
+    })
+  })
+})
 
 beforeEach(() => {
   motherFile = {
@@ -53,42 +69,42 @@ describe('checkIsCorrectFileSize', () => {
   })
 })
 
-// describe('getAudioFileFromRequest', () => {
-// vi.doMock('formidable', () => ({
-//   default: vi.fn(() => ({
-//     parse: vi.fn((req, callback) => { callback(true, {}, {}) }) // Configuramos la función parse como un mock genérico aquí
-//   }))
-// }))
+describe('getAudioFileFromRequest', () => {
+  afterEach(() => {
+    mocks.parseMockFun.mockClear()
+  })
 
-// test('should reject if form.parse returns an error', async () => {
-//   const mockRequest = {} as unknown as Request
-//   vi.spyOn(formidable, 'formidable').mockImplementation((originalFile) => {
-//     return (
-//       {
-//         ...originalFile()
-//       }
-//     )
-//   })
-//   mockForm.parse = vi.fn((req, callback) => { callback(true, {}, {}) }) // Configuramos el mock específico aquí
+  test('should reject if form.parse returns an error', async () => {
+    // eslint-disable-next-line n/no-callback-literal
+    mocks.parseMockFun.mockImplementation((req, callback) => { callback(true, {}, {}) })
 
-//   await expect(getAudioFileFromRequest(mockRequest)).rejects.toThrow('Error parsing the form.')
-// })
+    await expect(getAudioFileFromRequest({} as unknown as Request)).rejects.toThrowError(ParsingError)
+    expect(mocks.parseMockFun).toBeCalledTimes(1)
+  })
 
-// test('should reject if no audio file is found', async () => {
-//   const mockRequest = {} as Request
-//   const mockForm = formidable()
-//   mockForm.parse = vi.fn((req, callback) => { callback(null, {}, { audio: [] }) })
+  test('should reject if no audio file is found', async () => {
+    // eslint-disable-next-line n/no-callback-literal
+    mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [] }) })
 
-//   await expect(getAudioFileFromRequest(mockRequest)).rejects.toThrow('No audio file found.')
-// })
+    await expect(getAudioFileFromRequest({} as unknown as Request)).rejects.toThrowError(MissingFileError)
+    expect(mocks.parseMockFun).toBeCalledTimes(1)
+  })
 
-// test('should resolve with the audio file if it is found', async () => {
-//   const mockRequest = {} as Request
-//   const expectedFile = new File([''], 'audio.mp3')
-//   const mockForm = formidable()
-//   mockForm.parse = vi.fn((req, callback) => { callback(null, {}, { audio: [expectedFile] }) })
+  test('should resolve with the audio file if it is found', async () => {
+    const audioFile: FormFile = {
+      size: 10,
+      filepath: 'string',
+      newFilename: 'string',
+      mimetype: 'string',
+      mtime: new Date(),
+      originalFilename: 'string'
+    }
 
-//   const result = await getAudioFileFromRequest(mockRequest)
-//   expect(result).toBe(expectedFile)
-// })
-// })
+    // eslint-disable-next-line n/no-callback-literal
+    mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [audioFile] }) })
+
+    const audio = await getAudioFileFromRequest({} as unknown as Request)
+    expect(mocks.parseMockFun).toBeCalledTimes(1)
+    expect(audio).toBe(audioFile)
+  })
+})

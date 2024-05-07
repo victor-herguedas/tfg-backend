@@ -222,4 +222,16 @@ describe('mockedTests', () => {
     // volveria al valor con el que se inicializa por defeto
     expect(cart.getApples()).toBe(42)
   })
+
+  test.skip('mockReturnValueOnce', async () => {
+    vi.doMock('./suma.ts', () => {
+      return {
+        suma: vi.fn(() => { return 55 })
+      }
+    })
+
+    const { sumarPrueba } = await import('./prueba.js')
+
+    expect(sumarPrueba).toBe(55)
+  })
 })
