@@ -9,9 +9,9 @@
     "target": "es2022",
 
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // },
 
     "outDir": "./dist",
     "strict": true,
@@ -20,6 +20,5 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16"
   },
-
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./vitest.config.ts"]
 }
