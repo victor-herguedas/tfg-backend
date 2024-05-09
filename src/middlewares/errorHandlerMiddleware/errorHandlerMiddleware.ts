@@ -5,6 +5,7 @@ import { NotSupportedFileSizeError, NotSupportedFileSizeErrorType } from '../../
 import { OpenAiApiError, OpenAiApiErrorType } from '../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { MissingFileError, MissingFileErrorType } from '../../utilities/errors/MissingFileError/MissingFileError.js'
 import { ParsingError, ParsingErrorType } from '../../utilities/errors/ParsingError/ParsingError.js'
+import { ValidationError, ValidationErrorType, getValidationErrorObject } from '../../utilities/errors/ValidationError/ValidationError.js'
 
 export function errorHandlerMiddleware (error: Error, req: Request, res: Response, next: NextFunction): void {
   if (error instanceof NotSupportedFileTypeError) {
@@ -17,6 +18,9 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
     res.status(400).json(createResponseBodyError({ message: error.message, type: MissingFileErrorType }))
   } else if (error instanceof ParsingError) {
     res.status(500).json(createResponseBodyError({ message: error.message, type: ParsingErrorType }))
+  } else if (error instanceof ValidationError) {
+    const { field, message } = getValidationErrorObject(error.message)
+    res.status(400).json(createResponseBodyError({ message, type: ValidationErrorType, field }))
   } else {
     res.status(100).json(createResponseBodyError({ message: error.message, type: 'UnknownErrorType' }))
   }

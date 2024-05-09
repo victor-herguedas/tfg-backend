@@ -1,13 +1,13 @@
 export interface ResponseBodyError {
-  type?: string
-  message?: string
-  field?: string
+  type: string | null
+  message: string | null
+  field: string | null
 }
 
-export const createResponseBodyError = ({ type, message, field }: ResponseBodyError): ResponseBodyError => {
+export const createResponseBodyError = ({ type, message, field }: { type?: string, message?: string, field?: string }): ResponseBodyError => {
   return {
-    type,
-    message,
-    field
+    type: type ?? null,
+    message: message ?? null,
+    field: field ?? null
   }
 }
