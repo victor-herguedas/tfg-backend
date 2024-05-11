@@ -34,4 +34,8 @@ describe('POST /auth/register ', () => {
       })
     expect(res.status === 201).toBeTruthy()
   })
+
+  // Si el usuario ya existe
+  // Comprobar que el usuario se ha guardado en la base de datos y si tiene un hash
+  // Comprobar que se ha mandado un token
 })

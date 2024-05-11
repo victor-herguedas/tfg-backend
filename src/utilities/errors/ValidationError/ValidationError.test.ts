@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest'
-import { getValidationErrorObject, getvalidationErrorMessage } from './ValidationError.js'
+import { getValidationErrorObject, getValidationErrorMessage } from './ValidationError.js'
 
 describe('ValidatingError tests', () => {
   const field = 'correo'
   const errorMessage = 'Invalid email'
 
   test('should return correct validation error', () => {
-    expect(getvalidationErrorMessage(field, errorMessage)).toBe(`${field}:${errorMessage}`)
+    expect(getValidationErrorMessage(field, errorMessage)).toBe(`${field}:${errorMessage}`)
   })
 
   test('should return correct validation object', () => {

@@ -9,3 +9,8 @@ export const registerPost = async (req: Request, res: Response, next: NextFuncti
     next(error)
   }
 }
+
+// Comprobar si el usuario ya existe
+// Crear el hash y el salt de la contraseña
+// Guardar los datos en la base de datos
+// Mandar un token

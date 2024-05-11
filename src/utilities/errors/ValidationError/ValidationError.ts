@@ -7,7 +7,7 @@ export class ValidationError extends Error {
 
 export const ValidationErrorType = 'ValidationError'
 
-export const getvalidationErrorMessage = (field: string, errorMessage: string): string => {
+export const getValidationErrorMessage = (field: string, errorMessage: string): string => {
   return `${field}:${errorMessage}`
 }
 

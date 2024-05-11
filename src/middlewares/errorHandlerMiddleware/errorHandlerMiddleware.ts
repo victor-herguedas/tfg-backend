@@ -6,6 +6,7 @@ import { OpenAiApiError, OpenAiApiErrorType } from '../../utilities/errors/OpenA
 import { MissingFileError, MissingFileErrorType } from '../../utilities/errors/MissingFileError/MissingFileError.js'
 import { ParsingError, ParsingErrorType } from '../../utilities/errors/ParsingError/ParsingError.js'
 import { ValidationError, ValidationErrorType, getValidationErrorObject } from '../../utilities/errors/ValidationError/ValidationError.js'
+import { UnautorizedError } from '../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 
 export function errorHandlerMiddleware (error: Error, req: Request, res: Response, next: NextFunction): void {
   if (error instanceof NotSupportedFileTypeError) {
@@ -21,6 +22,8 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
   } else if (error instanceof ValidationError) {
     const { field, message } = getValidationErrorObject(error.message)
     res.status(400).json(createResponseBodyError({ message, type: ValidationErrorType, field }))
+  } else if (error instanceof UnautorizedError) {
+    res.status(400).json(createResponseBodyError({ message: error.message, type: error.type }))
   } else {
     res.status(100).json(createResponseBodyError({ message: error.message, type: 'UnknownErrorType' }))
   }

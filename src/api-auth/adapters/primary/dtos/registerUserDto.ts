@@ -1,6 +1,6 @@
 import { type Request } from 'express'
 import vine, { errors } from '@vinejs/vine'
-import { ValidationError, getvalidationErrorMessage } from '../../../../utilities/errors/ValidationError/ValidationError.js'
+import { ValidationError, getValidationErrorMessage } from '../../../../utilities/errors/ValidationError/ValidationError.js'
 
 export class RegisterUserDto {
   email: string
@@ -26,7 +26,7 @@ export const getRegisterUserDto = async (req: Request): Promise<RegisterUserDto>
     return (validatedRegisterUserDto)
   } catch (error) {
     if (error instanceof errors.E_VALIDATION_ERROR) {
-      throw new ValidationError(getvalidationErrorMessage(error.messages[0].field as unknown as string, error.messages[0].message as unknown as string))
+      throw new ValidationError(getValidationErrorMessage(error.messages[0].field as unknown as string, error.messages[0].message as unknown as string))
     }
     throw new Error('Unexpected error')
   }
