@@ -9,6 +9,6 @@ export class User {
     public readonly salt: string,
     public readonly password: string,
     public readonly name: string,
-    public readonly roles: Rol[]
+    public readonly rols: Rol[]
   ) {}
 }

@@ -36,6 +36,12 @@ describe('Register User DTO', () => {
     await expect(getRegisterUserDto(request as unknown as Request)).rejects.toThrowError(ValidationError)
   })
 
+  test('should trim the email and make it lowerCase', async () => {
+    request.body.email = ' VicToR@gmail.COM'
+    const validatedBody = await getRegisterUserDto(request as unknown as Request)
+    expect(validatedBody.email).toBe('victor@gmail.com')
+  })
+
   test('should not accept a not valid password', async () => {
     request.body.password = '12345'
     await expect(getRegisterUserDto(request as unknown as Request)).rejects.toThrowError(ValidationError)

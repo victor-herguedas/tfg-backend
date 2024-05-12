@@ -15,9 +15,9 @@ export class RegisterUserDto {
 }
 
 const schema = vine.object({
-  email: vine.string().email().trim(),
-  password: vine.string().minLength(6).trim(),
-  name: vine.string().minLength(1).trim()
+  email: vine.string().trim().email().toLowerCase(),
+  password: vine.string().trim().minLength(6),
+  name: vine.string().trim().minLength(1)
 })
 
 export const getRegisterUserDto = async (req: Request): Promise<RegisterUserDto> => {
