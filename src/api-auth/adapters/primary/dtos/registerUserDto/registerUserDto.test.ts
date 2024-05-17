@@ -2,7 +2,7 @@ import { beforeEach } from 'node:test'
 import { describe, expect, test } from 'vitest'
 import { getRegisterUserDto } from './registerUserDto.js'
 import { type Request } from 'express'
-import { ValidationError } from '../../../../utilities/errors/ValidationError/ValidationError.js'
+import { ValidationError } from '../../../../../utilities/errors/ValidationError/ValidationError.js'
 interface FakeRequest {
   body: {
     email: string

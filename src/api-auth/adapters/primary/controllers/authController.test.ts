@@ -10,13 +10,6 @@ describe('POST /auth/register ', () => {
     await restartDatabase()
   })
 
-  test('should exist', async () => {
-    const res = await req(app)
-      .post('/auth/register')
-
-    expect(res.status !== 404).toBeTruthy()
-  })
-
   test('should return validation error with the field if no correct fields', async () => {
     const res = await req(app)
       .post('/auth/register')
@@ -57,5 +50,38 @@ describe('POST /auth/register ', () => {
       })
 
     expect(res.status === 400).toBeTruthy()
+  })
+})
+
+describe('POST /auth/login ', () => {
+  beforeEach(async () => {
+    await restartDatabase()
+  })
+
+  test('should return validation error with the field if no correct fields', async () => {
+    const res = await req(app)
+      .post('/auth/login')
+      .send({
+        email: 'wrongemail'
+      })
+    expect(res.status).toBe(400)
+    expect(res.body.type === 'ValidationError').toBeTruthy()
+    expect(res.body.field === 'email').toBeTruthy()
+  })
+
+  test('should return 200 and token if user login', async () => {
+    const email = 'exist@test.com'
+    const res = await req(app)
+      .post('/auth/login')
+      .send({
+        email,
+        password: '12345678'
+      })
+    expect(res.status).toBe(200)
+    const resHeadder = res.header['set-cookie'][0]
+    const token = resHeadder.split('=')[1].split(';')[0]
+    expect(token).toBeTruthy()
+    const tokenPayload = await decodeAuthToken(token)
+    expect((tokenPayload).email).toBe(email)
   })
 })

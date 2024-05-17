@@ -1,13 +1,13 @@
 import { EmailAlreadyExistError, getEmailAlreadyExistErrorMessage } from '../../../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
-import { type RegisterUserDto } from '../../../adapters/primary/dtos/registerUserDto.js'
+import { type RegisterUserDto } from '../../../adapters/primary/dtos/registerUserDto/registerUserDto.js'
 import { findUserByEmail, saveUser } from '../../../adapters/secundary/adapters/UserAdapter.js'
 import { User } from '../../models/User.js'
-import { generateSalt, hashPassword } from '../securityService/securityService.js'
+import { generateSalt, hashPassword } from '../../services/securityService/securityService.js'
 
 export const createNewUser = async (userDTO: RegisterUserDto): Promise<User> => {
   await checkIsClonedUser(userDTO.email)
 
-  let user = userDTOToUser(userDTO)
+  let user = userDtoToUser(userDTO)
   replaceUserHashedPassword(user)
 
   user = await saveUser(user)
@@ -20,7 +20,7 @@ const checkIsClonedUser = async (email: string): Promise<void> => {
   if (isClonedUser) throw new EmailAlreadyExistError(getEmailAlreadyExistErrorMessage(email))
 }
 
-const userDTOToUser = (userDTO: RegisterUserDto): User => {
+const userDtoToUser = (userDTO: RegisterUserDto): User => {
   return new User(
     null,
     userDTO.email,

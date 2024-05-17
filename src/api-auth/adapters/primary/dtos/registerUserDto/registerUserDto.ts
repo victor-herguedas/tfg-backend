@@ -1,6 +1,6 @@
 import { type Request } from 'express'
 import vine, { errors } from '@vinejs/vine'
-import { ValidationError, getValidationErrorMessage } from '../../../../utilities/errors/ValidationError/ValidationError.js'
+import { ValidationError, getValidationErrorMessage } from '../../../../../utilities/errors/ValidationError/ValidationError.js'
 
 export class RegisterUserDto {
   email: string

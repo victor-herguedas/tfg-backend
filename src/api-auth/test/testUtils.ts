@@ -1,5 +1,6 @@
 import { mongodbConnection } from '../../utilities/mongodb/mongodb.js'
 import { UserEntity } from '../adapters/secundary/enitties/UserEntity.js'
+import { generateSalt, hashPassword } from '../domain/services/securityService/securityService.js'
 
 export const restartDatabase = async (): Promise<void> => {
   const collections = await mongodbConnection.db?.listCollections()?.toArray()
@@ -12,10 +13,12 @@ export const restartDatabase = async (): Promise<void> => {
 }
 
 const addUsers = async (): Promise<void> => {
+  const userSalt = generateSalt()
+  const userPassword = '12345678'
   await new UserEntity({
     email: 'exist@test.com',
-    salt: 'salt',
-    password: 'password',
+    salt: userSalt,
+    password: hashPassword(userPassword, userSalt),
     name: 'exist',
     rols: []
   }).save()
