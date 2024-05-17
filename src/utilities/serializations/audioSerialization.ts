@@ -69,7 +69,6 @@ export const renameFile = (file: FormFile, newFilePath: string): void => {
   try {
     fs.renameSync(file.filepath, newFilePath)
   } catch (e: any) {
-    console.log(e?.message)
     throw new ParsingError(parsingErrorMessage(fileName))
   }
   file.filepath = newFilePath

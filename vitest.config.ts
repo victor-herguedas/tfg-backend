@@ -3,9 +3,12 @@ import path from 'path'
 import dotenv from 'dotenv'
 
 dotenv.config()
+process.env.SERVER_PORT = '0'
+process.env.NODE_ENV = 'test'
 
 export default defineConfig({
   test: {
+    // setupFiles: ['./src/test/setupTest.ts'],
     // silent: false
     // ...
     coverage: {

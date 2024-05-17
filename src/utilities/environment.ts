@@ -25,3 +25,19 @@ export const PAID_TEST: boolean = paidTest === 'true'
 const fileName = fileURLToPath(import.meta.url)
 const dirName = dirname(fileName)
 export const MEDIA_PATH = path.join(dirName, '..', '..', 'media')
+
+const jwtSecret = process.env.JWT_SECRET
+if (jwtSecret === undefined) throw new Error(envExceptionError('JWT_SECRET'))
+export const JWT_SECRET = jwtSecret
+
+const jwtExpiresIn = process.env.JWT_EXPIRES_IN
+if (jwtExpiresIn === undefined) throw new Error(envExceptionError('JWT_EXPIRES_IN'))
+export const JWT_EXPIRES_IN = jwtExpiresIn
+
+const mongoUri = process.env.MONGO_URI
+if (mongoUri === undefined) throw new Error(envExceptionError('MONGO_URI'))
+export const MONGO_URI = mongoUri
+
+const mongoDbName = process.env.MONGO_DB_NAME
+if (mongoDbName === undefined) throw new Error(envExceptionError('MONGO_DB_NAME'))
+export const MONGO_DB_NAME = mongoDbName
