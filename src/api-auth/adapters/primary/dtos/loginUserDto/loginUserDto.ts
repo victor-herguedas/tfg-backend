@@ -13,7 +13,7 @@ export class LoginUserDto {
 }
 
 const schema = vine.object({
-  email: vine.string().trim().email().toLowerCase(),
+  email: vine.string().trim().email().toLowerCase().minLength(1),
   password: vine.string().trim().minLength(1).maxLength(30)
 })
 
