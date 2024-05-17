@@ -16,7 +16,7 @@ export class RegisterUserDto {
 
 const schema = vine.object({
   email: vine.string().trim().email().toLowerCase(),
-  password: vine.string().trim().minLength(6),
+  password: vine.string().trim().minLength(6).maxLength(30),
   name: vine.string().trim().minLength(1)
 })
 

@@ -3,14 +3,17 @@ import { ValidationError, getValidationErrorMessage } from '../../../../utilitie
 
 export class AuthTokenPayload {
   id: string
+  email: string
 
-  constructor (id: string) {
+  constructor (id: string, email: string) {
     this.id = id
+    this.email = email
   }
 }
 
 const schema = vine.object({
-  id: vine.string().trim().minLength(1)
+  id: vine.string().trim().minLength(1),
+  email: vine.string().trim().email().toLowerCase()
 })
 
 export const getAuthTokenPayload = async (data: any): Promise<AuthTokenPayload> => {

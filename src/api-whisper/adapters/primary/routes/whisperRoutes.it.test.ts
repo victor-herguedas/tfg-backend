@@ -68,6 +68,4 @@ describe('whisper routes integration test', () => {
     expect(res.body.transcription).toContain('talento')
   }
   )
-
-  // Debe devolver un socket para esperar a recibir la petición de que se está procesando
 })

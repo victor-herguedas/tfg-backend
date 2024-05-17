@@ -7,6 +7,9 @@ import { MissingFileError, MissingFileErrorType } from '../../utilities/errors/M
 import { ParsingError, ParsingErrorType } from '../../utilities/errors/ParsingError/ParsingError.js'
 import { ValidationError, ValidationErrorType, getValidationErrorObject } from '../../utilities/errors/ValidationError/ValidationError.js'
 import { UnautorizedError } from '../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
+import { DatabaseError } from '../../utilities/errors/DatabaseError/DatabaseError.js'
+import { EmailAlreadyExistError } from '../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
+import { InternalError } from '../../utilities/errors/InternalError/InternalError.js'
 
 export function errorHandlerMiddleware (error: Error, req: Request, res: Response, next: NextFunction): void {
   if (error instanceof NotSupportedFileTypeError) {
@@ -24,6 +27,12 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
     res.status(400).json(createResponseBodyError({ message, type: ValidationErrorType, field }))
   } else if (error instanceof UnautorizedError) {
     res.status(400).json(createResponseBodyError({ message: error.message, type: error.type }))
+  } else if (error instanceof DatabaseError) {
+    res.status(500).json(createResponseBodyError({ message: error.message, type: error.type }))
+  } else if (error instanceof EmailAlreadyExistError) {
+    res.status(400).json(createResponseBodyError({ message: error.message, type: error.name }))
+  } else if (error instanceof InternalError) {
+    res.status(500).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else {
     res.status(100).json(createResponseBodyError({ message: error.message, type: 'UnknownErrorType' }))
   }

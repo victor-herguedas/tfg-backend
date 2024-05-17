@@ -51,4 +51,9 @@ describe('Register User DTO', () => {
     request.body.name = ''
     await expect(getRegisterUserDto(request as unknown as Request)).rejects.toThrowError(ValidationError)
   })
+
+  test('the password should be less than 30 characters', async () => {
+    request.body.password = 'asdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavasasdavas'
+    await expect(getRegisterUserDto(request as unknown as Request)).rejects.toThrowError(ValidationError)
+  })
 })

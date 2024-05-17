@@ -1,29 +1,38 @@
 import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../../../../utilities/environment.js'
+import { JWT_EXPIRES_IN, JWT_SECRET } from '../../../../utilities/environment.js'
 import { UnautorizedError, getUnauthorizedErrorMessage } from '../../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 import { type AuthTokenPayload, getAuthTokenPayload } from '../../models/AuthTokenPayload/AuthTokenPayload.js'
 import { ValidationError } from '../../../../utilities/errors/ValidationError/ValidationError.js'
-
-export const generateAuthToken = (payload: Record<string, unknown>, secret: string, expiresIn: string): string => {
-  return jwt.sign(payload, secret, { expiresIn })
-}
+import bycript from 'bcrypt'
+import { InternalError } from '../../../../utilities/errors/InternalError/InternalError.js'
 
 export const generateSalt = (): string => {
-  const salt = crypto.getRandomValues(new Uint8Array(4)).reduce((acc, value) => acc + value.toString(), '').toString().trim()
-  return salt
-}
-
-export const generateSecret = (salt: string): string => {
-  const secret = JWT_SECRET + salt
-  return secret
-}
-
-export const decodeAuthToken = async (token: string, secret: string): Promise<AuthTokenPayload> => {
   try {
-    const decodedToken = jwt.verify(token, secret)
+    const salt = bycript.genSaltSync(10)
+    return salt
+  } catch (error) {
+    throw new InternalError('Generate Salt Error')
+  }
+}
+
+export const hashPassword = (password: string, salt: string): string => {
+  try {
+    const hashedPassword = bycript.hashSync(password, salt)
+    return hashedPassword
+  } catch (error) {
+    throw new InternalError('Hash Password Error')
+  }
+}
+
+export const generateAuthToken = (payload: AuthTokenPayload): string => {
+  payload = { ...payload }
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+}
+
+export const decodeAuthToken = async (token: string): Promise<AuthTokenPayload> => {
+  try {
+    const decodedToken = jwt.verify(token, JWT_SECRET)
     const authTokenPayload = await getAuthTokenPayload(decodedToken)
-    console.log('llegamos')
-    console.log(authTokenPayload)
     return authTokenPayload
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

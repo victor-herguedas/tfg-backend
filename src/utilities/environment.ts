@@ -33,3 +33,11 @@ export const JWT_SECRET = jwtSecret
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN
 if (jwtExpiresIn === undefined) throw new Error(envExceptionError('JWT_EXPIRES_IN'))
 export const JWT_EXPIRES_IN = jwtExpiresIn
+
+const mongoUri = process.env.MONGO_URI
+if (mongoUri === undefined) throw new Error(envExceptionError('MONGO_URI'))
+export const MONGO_URI = mongoUri
+
+const mongoDbName = process.env.MONGO_DB_NAME
+if (mongoDbName === undefined) throw new Error(envExceptionError('MONGO_DB_NAME'))
+export const MONGO_DB_NAME = mongoDbName

@@ -5,7 +5,6 @@ import { whisperRoutes } from './api-whisper/adapters/primary/routes/whisperRout
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware/errorHandlerMiddleware.js'
 import { authRoutes } from './api-auth/adapters/primary/routes/authRoutes.js'
 import bodyParser from 'body-parser'
-
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

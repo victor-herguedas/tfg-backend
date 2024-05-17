@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { expect, describe, test } from 'vitest'
+import { expect, describe, test, beforeEach } from 'vitest'
 import req from 'supertest'
 import app from '../../../../index.js'
+import { restartDatabase } from '../../../test/testUtils.js'
+import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
 
 describe('POST /auth/register ', () => {
+  beforeEach(async () => {
+    await restartDatabase()
+  })
+
   test('should exist', async () => {
     const res = await req(app)
       .post('/auth/register')
@@ -24,18 +30,32 @@ describe('POST /auth/register ', () => {
     expect(res.body.field === 'email').toBeTruthy()
   })
 
-  test('should return 200 ok and username if correct credentials', async () => {
+  test('should return 201 and return valid token', async () => {
+    const email = 'victor@gmail.com'
     const res = await req(app)
       .post('/auth/register')
       .send({
-        email: 'victor@gmail.com',
+        email,
         password: '123456',
         name: 'Victor'
       })
     expect(res.status === 201).toBeTruthy()
+    const resHeadder = res.header['set-cookie'][0]
+    const token = resHeadder.split('=')[1].split(';')[0]
+    expect(token).toBeTruthy()
+    const tokenPayload = await decodeAuthToken(token)
+    expect((tokenPayload).email).toBe(email)
   })
 
-  // Si el usuario ya existe
-  // Comprobar que el usuario se ha guardado en la base de datos y si tiene un hash
-  // Comprobar que se ha mandado un token
+  test('should return 400 if emailAlreadyExist', async () => {
+    const res = await req(app)
+      .post('/auth/register')
+      .send({
+        email: 'exist@test.com',
+        password: '123456',
+        name: 'Victor'
+      })
+
+    expect(res.status === 400).toBeTruthy()
+  })
 })

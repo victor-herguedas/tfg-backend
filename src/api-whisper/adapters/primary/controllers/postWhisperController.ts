@@ -4,7 +4,6 @@ import { type NextFunction, type Request, type Response } from 'express'
 
 export const postWhisper = async (req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined> => {
   try {
-    console.log(req.body)
     const audio = await getValidatedAudioFromFileFromRequest(req)
     const transcription = await whisperTranscribe(audio.filepath)
     return res.status(201).json({ transcription })
