@@ -6,6 +6,7 @@ import { MissingFileError, missingFileErrorMessage } from '../errors/MissingFile
 import { ParsingError, parsingErrorMessage } from '../errors/ParsingError/ParsingError.js'
 import path from 'path'
 import fs from 'fs'
+import { ValidationError, getValidationErrorMessage } from '../errors/ValidationError/ValidationError.js'
 
 export interface FormFile {
   size: number
@@ -84,6 +85,9 @@ export const checkIsCorrectFileSize = (file: FormFile): void => {
 export const getAudioFileFromRequest = async (req: Request): Promise<FormFile> => {
   const form = formidable({})
   return await new Promise((resolve, reject) => {
+    if (req.is('multipart/form-data') === false) {
+      reject(new ValidationError(getValidationErrorMessage('audio', 'Body content should be multipart/form-data.')))
+    }
     form.parse(req, (err: boolean, fields, files) => {
       if (err) {
         reject(new ParsingError(parsingErrorMessage('audio')))

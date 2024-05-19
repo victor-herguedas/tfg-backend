@@ -7,7 +7,7 @@ export interface Rol {
 
 export class User {
   constructor (
-    public readonly id: string | null,
+    public readonly id: string,
     public readonly email: string,
     public salt: string,
     public password: string,

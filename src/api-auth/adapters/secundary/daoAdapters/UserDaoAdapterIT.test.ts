@@ -1,6 +1,6 @@
 import { describe, expect, test, vitest } from 'vitest'
 import { getUserMother } from '../../../test/UserMother.js'
-import { findUserByEmail, saveUser } from './UserAdapter.js'
+import { findUserByEmail, saveUser } from './UserDaoAdapter.js'
 import { type User } from '../../../domain/models/User.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
 import { UserEntity } from '../enitties/UserEntity.js'

@@ -1,6 +1,6 @@
 import { EmailAlreadyExistError, getEmailAlreadyExistErrorMessage } from '../../../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
 import { type RegisterUserDto } from '../../../adapters/primary/dtos/registerUserDto/registerUserDto.js'
-import { findUserByEmail, saveUser } from '../../../adapters/secundary/adapters/UserAdapter.js'
+import { findUserByEmail, saveUser } from '../../../adapters/secundary/daoAdapters/UserDaoAdapter.js'
 import { User } from '../../models/User.js'
 import { generateSalt, hashPassword } from '../../services/securityService/securityService.js'
 

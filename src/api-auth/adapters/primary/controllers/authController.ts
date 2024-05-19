@@ -2,7 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express'
 import { createNewUser } from '../../../domain/handlers/createUserHandler/createUserHandler.js'
 import { getRegisterUserDto } from '../dtos/registerUserDto/registerUserDto.js'
 import { logInUser } from '../../../domain/handlers/loginUserHandler/loginUserHandler.js'
-import { getLoginUserDto } from '../dtos/loginUserDto/LoginUserDto.js'
+import { getLoginUserDto } from '../dtos/loginUserDto/loginUserDto.js'
 
 export const registerPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

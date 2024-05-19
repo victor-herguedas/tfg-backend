@@ -1,4 +1,4 @@
-import { type User } from '../../../../api-auth/domain/models/User.js'
+import { type User } from '../../../domain/models/User.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
 import { UserEntity, convertUserToUserEntity } from '../enitties/UserEntity.js'
 

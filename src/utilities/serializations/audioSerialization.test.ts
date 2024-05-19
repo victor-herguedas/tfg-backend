@@ -5,6 +5,7 @@ import { NotSupportedFileSizeError } from '../errors/NotSupportedFileSizeError/N
 import { type Request } from 'express'
 import { ParsingError } from '../errors/ParsingError/ParsingError.js'
 import { MissingFileError } from '../errors/MissingFileError/MissingFileError.js'
+import { ValidationError } from '../errors/ValidationError/ValidationError.js'
 
 let motherFile: FormFile
 
@@ -74,11 +75,29 @@ describe('getAudioFileFromRequest', () => {
     mocks.parseMockFun.mockClear()
   })
 
+  test('should fail if not req multipart/form-data format', async () => {
+    mocks.parseMockFun.mockImplementation((req, callback) => {
+      setTimeout(() => {
+        // eslint-disable-next-line n/no-callback-literal
+        callback(true, {}, {})
+      }, 10000)
+    })
+    const req = {
+      headers: {
+        'content-type': 'application/json'
+      },
+      is: (type: string) => {
+        return type !== 'multipart/form-data'
+      }
+    } as unknown as Request
+    await expect(getAudioFileFromRequest(req)).rejects.toThrowError(ValidationError)
+  })
+
   test('should reject if form.parse returns an error', async () => {
     // eslint-disable-next-line n/no-callback-literal
     mocks.parseMockFun.mockImplementation((req, callback) => { callback(true, {}, {}) })
 
-    await expect(getAudioFileFromRequest({} as unknown as Request)).rejects.toThrowError(ParsingError)
+    await expect(getAudioFileFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(ParsingError)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
   })
 
@@ -86,7 +105,7 @@ describe('getAudioFileFromRequest', () => {
     // eslint-disable-next-line n/no-callback-literal
     mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [] }) })
 
-    await expect(getAudioFileFromRequest({} as unknown as Request)).rejects.toThrowError(MissingFileError)
+    await expect(getAudioFileFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(MissingFileError)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
   })
 
@@ -103,7 +122,7 @@ describe('getAudioFileFromRequest', () => {
     // eslint-disable-next-line n/no-callback-literal
     mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [audioFile] }) })
 
-    const audio = await getAudioFileFromRequest({} as unknown as Request)
+    const audio = await getAudioFileFromRequest({ is: () => true } as unknown as Request)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
     expect(audio).toBe(audioFile)
   })

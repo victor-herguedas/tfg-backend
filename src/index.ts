@@ -5,12 +5,14 @@ import { whisperRoutes } from './api-whisper/adapters/primary/routes/whisperRout
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware/errorHandlerMiddleware.js'
 import { authRoutes } from './api-auth/adapters/primary/routes/authRoutes.js'
 import bodyParser from 'body-parser'
+import { meetingsRoutes } from './api-meetings/adapters/primary/routes/meetingsRoutes.js'
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/whisper/', whisperRoutes)
 app.use('/auth/', authRoutes)
+app.use('/meetings/', meetingsRoutes)
 
 app.listen(SERVER_PORT, () => {
   console.log(`Server running on ${chalk.blue(`http://localhost:${SERVER_PORT}`)}`)
