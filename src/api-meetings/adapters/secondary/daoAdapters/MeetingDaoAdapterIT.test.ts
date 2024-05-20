@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { restartDatabase } from '../../../../api-auth/test/testUtils.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { findMeetingById, saveMeeting } from './MeetingDaoAdapter.js'
 import { findUserByEmail } from '../../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
 

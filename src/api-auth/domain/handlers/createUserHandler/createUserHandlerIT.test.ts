@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { createNewUserHandler } from './createUserHandler.js'
 import { EmailAlreadyExistError } from '../../../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
 import { hashPassword } from '../../services/securityService/securityService.js'
-import { restartDatabase } from '../../../test/testUtils.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { getRegisterUserDtoMother } from '../../../test/RegisterUserDTOMother.js'
 
 describe('CreateUserService', () => {

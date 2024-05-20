@@ -1,6 +1,6 @@
-import { mongodbConnection } from '../../utilities/mongodb/mongodb.js'
-import { UserEntity } from '../adapters/secundary/enitties/UserEntity.js'
-import { generateSalt, hashPassword } from '../domain/services/securityService/securityService.js'
+import { mongodbConnection } from '../mongodb/mongodb.js'
+import { UserEntity } from '../../api-auth/adapters/secundary/enitties/UserEntity.js'
+import { generateSalt, hashPassword } from '../../api-auth/domain/services/securityService/securityService.js'
 
 export const restartDatabase = async (): Promise<void> => {
   const collections = await mongodbConnection.db?.listCollections()?.toArray()

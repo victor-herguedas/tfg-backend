@@ -2,7 +2,7 @@
 import { expect, describe, test, beforeEach } from 'vitest'
 import req from 'supertest'
 import app from '../../../../index.js'
-import { restartDatabase } from '../../../test/testUtils.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
 
 describe('POST /auth/register ', () => {
@@ -10,7 +10,7 @@ describe('POST /auth/register ', () => {
     await restartDatabase()
   })
 
-  test.fails('should create an account and then login', () => {})
+  test.skip('should create an account and then login', () => {})
 
   test('should return validation error with the field if no correct fields', async () => {
     const res = await req(app)

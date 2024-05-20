@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { restartDatabase } from '../../../test/testUtils.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { getUserMother } from '../../../test/UserMother.js'
 import { logInUserHandler } from './loginUserHandler.js'
 import { getLoginUserDtoMother } from '../../../test/LoginUserDTOMother.js'
