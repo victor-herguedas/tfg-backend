@@ -1,11 +1,22 @@
 import { type User } from '../../../domain/models/User.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
-import { UserEntity, convertUserToUserEntity } from '../enitties/UserEntity.js'
+import { UserEntity, type UserEntityInterface } from '../enitties/UserEntity.js'
 
-export const saveUser = async (user: User): Promise<User> => {
+export const saveUser = async (
+  email: string,
+  salt: string,
+  password: string,
+  name: string,
+  roles: string[] = []): Promise<User> => {
   try {
-    const userEnity = convertUserToUserEntity(user)
-    userEnity.updatedAt = new Date()
+    // const userEnity = convertUserToUserEntity(user)
+    const userEnity: UserEntityInterface = new UserEntity({
+      email,
+      salt,
+      password,
+      name,
+      roles
+    })
     return (await userEnity.save()).toUser()
   } catch (error) {
     throw new DatabaseError()

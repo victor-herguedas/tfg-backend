@@ -15,11 +15,11 @@ export interface UserEntityInterface extends mongoose.Document {
   name: string
   createdAt: Date
   updatedAt: Date
-  rols: RolEntityInterface[]
+  roles: RolEntityInterface[]
   toUser: () => User
 }
 
-const RolEntitySchema = new mongoose.Schema({
+const RolesEntitySchema = new mongoose.Schema({
   name: { type: String, required: true }
 })
 
@@ -30,7 +30,7 @@ const userEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() },
   updatedAt: { type: Date, default: () => new Date() },
-  rols: [RolEntitySchema]
+  roles: [RolesEntitySchema]
 })
 
 userEntitySchema.methods.toUser = function () {
@@ -44,19 +44,19 @@ userEntitySchema.methods.toUser = function () {
     userEntity.salt,
     userEntity.password,
     userEntity.name,
-    userEntity.rols
+    userEntity.roles
   )
 }
 
-export const convertUserToUserEntity = (user: User): UserEntityInterface => {
-  const userEntity = new UserEntity({
-    email: user.email,
-    salt: user.salt,
-    password: user.password,
-    name: user.name,
-    rols: user.rols
-  })
-  return userEntity
-}
+// export const convertUserToUserEntity = (user: User): UserEntityInterface => {
+//   const userEntity = new UserEntity({
+//     email: user.email,
+//     salt: user.salt,
+//     password: user.password,
+//     name: user.name,
+//     rols: user.rols
+//   })
+//   return userEntity
+// }
 
 export const UserEntity = mongodbConnection.model<UserEntityInterface>('User', userEntitySchema)

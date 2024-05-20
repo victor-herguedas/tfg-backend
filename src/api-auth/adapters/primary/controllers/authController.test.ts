@@ -10,6 +10,8 @@ describe('POST /auth/register ', () => {
     await restartDatabase()
   })
 
+  test.fails('should create an account and then login', () => {})
+
   test('should return validation error with the field if no correct fields', async () => {
     const res = await req(app)
       .post('/auth/register')

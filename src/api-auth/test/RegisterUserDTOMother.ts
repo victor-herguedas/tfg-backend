@@ -6,7 +6,7 @@ interface Params {
   name?: string
 }
 
-export const getRegisterDtoMother = (
+export const getRegisterUserDtoMother = (
   {
     email = 'test@gmail.com',
     password = 'password',
