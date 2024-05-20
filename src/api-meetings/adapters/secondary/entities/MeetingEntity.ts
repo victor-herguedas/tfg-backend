@@ -1,8 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { Meeting } from '../../../domain/models/Meeting.js'
-
-type TranscriptionState = 'IN_PROGRESS' | 'COMPLETED' | 'FAILED'
+import { Meeting, type TranscriptionState } from '../../../domain/models/Meeting.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
   _id: ObjectId

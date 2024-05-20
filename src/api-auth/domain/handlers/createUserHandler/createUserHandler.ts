@@ -4,7 +4,7 @@ import { findUserByEmail, saveUser } from '../../../adapters/secundary/daoAdapte
 import { User } from '../../models/User.js'
 import { generateSalt, hashPassword } from '../../services/securityService/securityService.js'
 
-export const createNewUser = async (userDTO: RegisterUserDto): Promise<User> => {
+export const createNewUserHandler = async (userDTO: RegisterUserDto): Promise<User> => {
   await checkIsClonedUser(userDTO.email)
 
   let user = userDtoToUser(userDTO)
@@ -22,7 +22,7 @@ const checkIsClonedUser = async (email: string): Promise<void> => {
 
 const userDtoToUser = (userDTO: RegisterUserDto): User => {
   return new User(
-    null,
+    '',
     userDTO.email,
     '',
     userDTO.password,

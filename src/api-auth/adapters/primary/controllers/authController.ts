@@ -1,13 +1,13 @@
 import { type Request, type Response, type NextFunction } from 'express'
-import { createNewUser } from '../../../domain/handlers/createUserHandler/createUserHandler.js'
+import { createNewUserHandler } from '../../../domain/handlers/createUserHandler/createUserHandler.js'
 import { getRegisterUserDto } from '../dtos/registerUserDto/registerUserDto.js'
-import { logInUser } from '../../../domain/handlers/loginUserHandler/loginUserHandler.js'
+import { logInUserHandler } from '../../../domain/handlers/loginUserHandler/loginUserHandler.js'
 import { getLoginUserDto } from '../dtos/loginUserDto/loginUserDto.js'
 
 export const registerPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const RegisterUserDto = await getRegisterUserDto(req)
-    const user = await createNewUser(RegisterUserDto)
+    const user = await createNewUserHandler(RegisterUserDto)
 
     const token = user.getAuthToken()
     res.cookie('token', token, { httpOnly: true, secure: true })
@@ -21,7 +21,7 @@ export const registerPost = async (req: Request, res: Response, next: NextFuncti
 export const loginPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const LoginUserDto = await getLoginUserDto(req)
-    const user = await logInUser(LoginUserDto)
+    const user = await logInUserHandler(LoginUserDto)
 
     const token = user.getAuthToken()
     res.cookie('token', token, { httpOnly: true, secure: true })

@@ -8,8 +8,8 @@ interface Params {
   audio?: FormFile
 }
 
-export const getCreateMeetingDtoMother = ({
-  name = 'Reunion de bienvendia',
+export const getMeetingDtoMother = ({
+  name = 'Welcome Meeting',
   date = new Date('2002-06-22'),
   audio = getFormFileMother({})
 }: Params): CreateMeetingDto => (new CreateMeetingDto(

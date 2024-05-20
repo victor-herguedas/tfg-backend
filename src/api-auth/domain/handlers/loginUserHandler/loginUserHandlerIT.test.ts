@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../test/testUtils.js'
 import { getUserMother } from '../../../test/UserMother.js'
-import { logInUser } from './loginUserHandler.js'
+import { logInUserHandler } from './loginUserHandler.js'
 import { getLoginUserDtoMother } from '../../../test/LoginUserDTOMother.js'
 import { UnautorizedError } from '../../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 
@@ -22,17 +22,17 @@ describe('CreateUserService', () => {
   })
 
   test('should return a user', async () => {
-    const getUser = await logInUser(loginUserDTO)
+    const getUser = await logInUserHandler(loginUserDTO)
     expect(getUser.email).toBe(user.email)
   })
 
   test('should return a unauthorized error if email does not exist', async () => {
     const notExistingUserDTO = getLoginUserDtoMother({ email: 'notExist@gmail.com' })
-    await expect(logInUser(notExistingUserDTO)).rejects.toThrow(UnautorizedError)
+    await expect(logInUserHandler(notExistingUserDTO)).rejects.toThrow(UnautorizedError)
   })
 
   test('should return a unauthorized if passwords are not the same', async () => {
     const notExistingUserDTO = { ...user, password: 'wrongPassword' }
-    await expect(logInUser(notExistingUserDTO)).rejects.toThrow(UnautorizedError)
+    await expect(logInUserHandler(notExistingUserDTO)).rejects.toThrow(UnautorizedError)
   })
 })

@@ -4,7 +4,7 @@ import { findUserByEmail } from '../../../adapters/secundary/daoAdapters/UserDao
 import { type User } from '../../models/User.js'
 import { hashPassword } from '../../services/securityService/securityService.js'
 
-export const logInUser = async (userDTO: LoginUserDto): Promise<User> => {
+export const logInUserHandler = async (userDTO: LoginUserDto): Promise<User> => {
   const user = await findUserByEmail(userDTO.email)
 
   if (user === null) throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
