@@ -1,13 +1,25 @@
 import { type User } from '../../../api-auth/domain/models/User.js'
+import { type FormFile } from '../../../utilities/serializations/audioSerialization.js'
 import { type CreateMeetingDto } from '../../adapters/primary/dtos/createMeetingDto.js'
-import { saveMeeting } from '../../adapters/secondary/daoAdapters/MeetingDaoAdapter.js'
-import { type Meeting } from '../models/Meeting.js'
+import { saveMeeting, updateMeeting } from '../../adapters/secondary/daoAdapters/MeetingDaoAdapter.js'
+import { TranscriptionState, type Meeting } from '../models/Meeting.js'
+import { whisperTranscribe } from '../services/whisperService/whisperService.js'
 
 export const createMeetingHandler = async (createMeetingDto: CreateMeetingDto, user: User): Promise<Meeting> => {
   const meeting = await saveMeeting(createMeetingDto.name, createMeetingDto.date, user.id)
-  // llamar a un metodo en otro hilo que
-  //    Transcriba la reunión
-  //    Almacene la transcripción
-  //    Cambie el estadio de la reunión a "Transcrita"
+  generateAndSaveTranscription(meeting, createMeetingDto.audio).catch(console.error)
   return meeting
+}
+
+export const generateAndSaveTranscription = async (meeting: Meeting, audio: FormFile): Promise<Meeting> => {
+  try {
+    const transcription = await whisperTranscribe(audio.filepath)
+    meeting.transcription = transcription
+    meeting.transcriptionState = TranscriptionState.COMPLETED
+  } catch (error) {
+    console.log('Error transcribing audio: ', error)
+    meeting.transcriptionState = TranscriptionState.FAILED
+  }
+  const savedMeeting = await updateMeeting(meeting)
+  return savedMeeting
 }

@@ -41,15 +41,18 @@ meetingEntitySchema.methods.toMeeting = function () {
   )
 }
 
-// export const convertUserToUserEntity = (meeting: Meeting): MeetingEntityInterface => {
-//   const userEntity = new MeetingEntity({
-//     email: user.email,
-//     salt: user.salt,
-//     password: user.password,
-//     name: user.name,
-//     rols: user.rols
-//   })
-//   return userEntity
-// }
+export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityInterface => {
+  const meetingEntity = new MeetingEntity({
+    _id: new mongoose.Types.ObjectId(meeting.id),
+    userId: new mongoose.Types.ObjectId(meeting.userId),
+    name: meeting.name,
+    transcription: meeting.transcription,
+    transcriptionState: meeting.transcriptionState,
+    State: meeting.transcriptionState,
+    meetingDate: meeting.meetingDate,
+    createdAt: meeting.createdAt
+  })
+  return meetingEntity
+}
 
 export const MeetingEntity = mongodbConnection.model<MeetingEntityInterface>('Meeting', meetingEntitySchema)
