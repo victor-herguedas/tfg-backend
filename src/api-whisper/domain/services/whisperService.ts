@@ -4,7 +4,6 @@ import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiA
 
 export const whisperTranscribe = async (filePath: string): Promise<string> => {
   try {
-    console.log(filePath)
     const transcription = await openAiSession.audio.transcriptions.create({
       file: fs.createReadStream(filePath),
       model: 'whisper-1'

@@ -10,7 +10,6 @@ describe('MeetingDaoAdapterIT', () => {
 
   test('should save and find the saved meeting', async () => {
     const user = await findUserByEmail('exist@test.com')
-    console.log('user', user)
     if (user === null) throw new Error('User not found')
     const userId = user.id
     const name = 'Kickoff meeting'

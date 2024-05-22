@@ -16,7 +16,6 @@ export const restartDatabase = async (): Promise<void> => {
 }
 
 const populate = async (): Promise<void> => {
-  console.log(new mongoose.Types.ObjectId())
   const userSalt = generateSalt()
   const userPassword = '12345678'
   const user1 = await new UserEntity({
