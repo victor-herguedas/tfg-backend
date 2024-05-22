@@ -17,12 +17,18 @@ export interface FormFile {
   originalFilename: string
 }
 
-export const getValidatedAudioFromFileFromRequest = async (req: Request): Promise<FormFile> => {
-  const audio = await getAudioFileFromRequest(req)
+interface AudioAndFields {
+  audio: FormFile
+  fields: any
+}
+
+export const getAudioAndFieldsFromFromRequest = async (req: Request): Promise<AudioAndFields> => {
+  const audioAndFields = await extractAudioAndFieldsFromRequest(req)
+  const audio = audioAndFields.audio
   checkIsCorrectFileSize(audio)
   checkIsCorrectFileMimeType(audio)
   renameFileWithExtension(audio)
-  return audio
+  return { audio, fields: audioAndFields.fields }
 }
 
 export const checkIsCorrectFileMimeType = (file: FormFile): void => {
@@ -84,7 +90,7 @@ export const checkIsCorrectFileSize = (file: FormFile): void => {
   if (fileSize >= (maxFileSize)) throw new NotSupportedFileSizeError(notSupportedFileSizeErrorMessage(fileSize.toString(), maxFileSize.toString()))
 }
 
-export const getAudioFileFromRequest = async (req: Request): Promise<FormFile> => {
+export const extractAudioAndFieldsFromRequest = async (req: Request): Promise<AudioAndFields> => {
   const form = formidable({})
   return await new Promise((resolve, reject) => {
     if (req.is('multipart/form-data') === false) {
@@ -98,7 +104,7 @@ export const getAudioFileFromRequest = async (req: Request): Promise<FormFile> =
       if (audios === undefined || audios.length === 0) {
         reject(new MissingFileError(missingFileErrorMessage('audio')))
       } else {
-        resolve(audios[0])
+        resolve({ audio: audios[0], fields })
       }
     })
   })

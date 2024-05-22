@@ -1,5 +1,5 @@
 import { describe, test, beforeEach, expect, vi, afterEach } from 'vitest'
-import { type FormFile, checkIsCorrectFileMimeType, checkIsCorrectFileSize, getAudioFileFromRequest } from './audioSerialization.js'
+import { type FormFile, checkIsCorrectFileMimeType, checkIsCorrectFileSize, extractAudioAndFieldsFromRequest } from './audioSerialization.js'
 import { NotSupportedFileTypeError } from '../errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
 import { NotSupportedFileSizeError } from '../errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
 import { type Request } from 'express'
@@ -90,14 +90,14 @@ describe('getAudioFileFromRequest', () => {
         return type !== 'multipart/form-data'
       }
     } as unknown as Request
-    await expect(getAudioFileFromRequest(req)).rejects.toThrowError(ValidationError)
+    await expect(extractAudioAndFieldsFromRequest(req)).rejects.toThrowError(ValidationError)
   })
 
   test('should reject if form.parse returns an error', async () => {
     // eslint-disable-next-line n/no-callback-literal
     mocks.parseMockFun.mockImplementation((req, callback) => { callback(true, {}, {}) })
 
-    await expect(getAudioFileFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(ParsingError)
+    await expect(extractAudioAndFieldsFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(ParsingError)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
   })
 
@@ -105,11 +105,11 @@ describe('getAudioFileFromRequest', () => {
     // eslint-disable-next-line n/no-callback-literal
     mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [] }) })
 
-    await expect(getAudioFileFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(MissingFileError)
+    await expect(extractAudioAndFieldsFromRequest({ is: () => true } as unknown as Request)).rejects.toThrowError(MissingFileError)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
   })
 
-  test('should resolve with the audio file if it is found', async () => {
+  test('should resolve with the audio file and fields if it is found', async () => {
     const audioFile: FormFile = {
       size: 10,
       filepath: 'string',
@@ -120,10 +120,11 @@ describe('getAudioFileFromRequest', () => {
     }
 
     // eslint-disable-next-line n/no-callback-literal
-    mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, {}, { audio: [audioFile] }) })
+    mocks.parseMockFun.mockImplementation((req, callback) => { callback(null, { field: 'new Field' }, { audio: [audioFile] }) })
 
-    const audio = await getAudioFileFromRequest({ is: () => true } as unknown as Request)
+    const audioAndFields = await extractAudioAndFieldsFromRequest({ is: () => true } as unknown as Request)
     expect(mocks.parseMockFun).toBeCalledTimes(1)
-    expect(audio).toBe(audioFile)
+    expect(audioAndFields.audio).toBe(audioFile)
+    expect(audioAndFields.fields).toEqual({ field: 'new Field' })
   })
 })
