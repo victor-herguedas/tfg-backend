@@ -35,7 +35,6 @@ export class User {
       return user
     } catch (error) {
       console.log('error')
-      console.log(error.message)
       throw new ParsingError(getParsingErrorMessage('User'))
     }
   }

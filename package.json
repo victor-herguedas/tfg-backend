@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "lint": "eslint . --ext .ts",
     "test": "vitest",
     "build": "tsc",
     "bench": "vitest bench",
