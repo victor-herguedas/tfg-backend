@@ -22,8 +22,11 @@ const schema = vine.object({
 
 export const getCreateMeetingDto = async (req: Request): Promise<CreateMeetingDto> => {
   try {
-    const audio = await getAudioAndFieldsFromFromRequest(req)
-    const validatedCreateMeetingData = await vine.validate({ schema, data: req.body })
+    const { audio, fields } = await getAudioAndFieldsFromFromRequest(req)
+    Object.keys(fields as unknown as Record<string, string[]>).forEach((key: string) => {
+      fields[key] = fields[key][0]
+    })
+    const validatedCreateMeetingData = await vine.validate({ schema, data: fields })
     return new CreateMeetingDto(validatedCreateMeetingData.name, validatedCreateMeetingData.date, audio)
   } catch (error) {
     if (error instanceof errors.E_VALIDATION_ERROR) {

@@ -26,7 +26,7 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
     const { field, message } = getValidationErrorObject(error.message)
     res.status(400).json(createResponseBodyError({ message, type: ValidationErrorType, field }))
   } else if (error instanceof UnautorizedError) {
-    res.status(400).json(createResponseBodyError({ message: error.message, type: error.type }))
+    res.status(401).json(createResponseBodyError({ message: error.message, type: error.type }))
   } else if (error instanceof DatabaseError) {
     res.status(500).json(createResponseBodyError({ message: error.message, type: error.type }))
   } else if (error instanceof EmailAlreadyExistError) {

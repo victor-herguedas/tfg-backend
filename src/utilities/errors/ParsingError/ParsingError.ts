@@ -7,6 +7,6 @@ export class ParsingError extends Error {
 
 export const ParsingErrorType = 'ParsingError'
 
-export const parsingErrorMessage = (parsedName: string, extraInfo?: string): string => {
+export const getParsingErrorMessage = (parsedName: string, extraInfo?: string): string => {
   return `Error parsing ${parsedName}. ${extraInfo}`
 }

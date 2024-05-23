@@ -25,7 +25,7 @@ vi.mock('../../../../utilities/openAI/openAi.js', async (importOriginal) => {
 describe('whisper openAi api it', () => {
   test('unitary whisper', async () => {
     const transcription = await whisperTranscribe(path.join(MEDIA_PATH, 'test-media', 'test.mp3'))
-    expect(transcription).toContain(This is a placeholder for the paid test.)
+    expect(transcription).toContain('This is a placeholder for the paid test.')
     vi.doUnmock('../../../utilities/openAI/openAi.js')
   })
 })

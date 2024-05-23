@@ -1,6 +1,6 @@
 import { describe, expect, test, vitest } from 'vitest'
 import { getUserMother } from '../../../test/UserMother.js'
-import { findUserByEmail, saveUser } from './UserDaoAdapter.js'
+import { findUserByEmail, findUserById, saveUser } from './UserDaoAdapter.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
 import { UserEntity } from '../enitties/UserEntity.js'
 
@@ -71,5 +71,17 @@ describe('Save User', () => {
 
     expect(updatedUser?.createdAt.toString()).toBe(updatedUser?.createdAt.toString())
     expect(updatedUser?.updatedAt.toString()).not.toBe(savedUser?.updatedAt.toString())
+  })
+
+  test('should find a user by id', async () => {
+    const user = getUserMother({})
+    const userSaved = await saveUser(
+      user.email,
+      user.salt,
+      user.password,
+      user.name
+    )
+    const userFound = await findUserById(userSaved.id)
+    expect(userFound?.id).toBe(userSaved.id)
   })
 })

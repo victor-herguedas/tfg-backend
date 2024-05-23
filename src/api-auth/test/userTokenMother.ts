@@ -1,1 +1,2 @@
 export const getUserTokenMother = (): string => { return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGJiYzI1NTkyNjY3M2U3MTIyNjQ5ZSIsImVtYWlsIjoiZXhpc3RAdGVzdC5jb20iLCJpYXQiOjk3MTY0MDkzNzYsImV4cCI6OTk5OTk0OTU3NzZ9.ynrocfc8WbT_rivbaP2b2A3w-3h3gDiJGbxIQ_c4I08' }
+export const getNotExistingUserTokenMother = (): string => { return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGJiYzI1NTkyNjY3M2U3MTIyNjQ5ZiIsImVtYWlsIjoibm90RXhpc3RAdGVzdC5jb20iLCJpYXQiOjk3MTY0MDkzNzYsImV4cCI6OTk5OTk0OTU3NzZ9.lM50moFHOPMcX6gpXqHMZGUcAeLjktL6gzFUYbYRnh0' }

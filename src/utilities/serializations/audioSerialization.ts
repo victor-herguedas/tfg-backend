@@ -3,7 +3,7 @@ import formidable from 'formidable'
 import { NotSupportedFileTypeError, notSupportedFileTypeErrorMessage } from '../errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
 import { NotSupportedFileSizeError, notSupportedFileSizeErrorMessage } from '../errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
 import { MissingFileError, missingFileErrorMessage } from '../errors/MissingFileError/MissingFileError.js'
-import { ParsingError, parsingErrorMessage } from '../errors/ParsingError/ParsingError.js'
+import { ParsingError, getParsingErrorMessage } from '../errors/ParsingError/ParsingError.js'
 import path from 'path'
 import fs from 'fs'
 import { ValidationError, getValidationErrorMessage } from '../errors/ValidationError/ValidationError.js'
@@ -78,7 +78,7 @@ export const renameFile = (file: FormFile, newFilePath: string): void => {
   try {
     fs.renameSync(file.filepath, newFilePath)
   } catch (e: any) {
-    throw new ParsingError(parsingErrorMessage(fileName))
+    throw new ParsingError(getParsingErrorMessage(fileName))
   }
   file.filepath = newFilePath
 }
@@ -98,7 +98,7 @@ export const extractAudioAndFieldsFromRequest = async (req: Request): Promise<Au
     }
     form.parse(req, (err: boolean, fields, files) => {
       if (err) {
-        reject(new ParsingError(parsingErrorMessage('audio')))
+        reject(new ParsingError(getParsingErrorMessage('audio')))
       }
       const audios: FormFile[] = files.audio as FormFile[]
       if (audios === undefined || audios.length === 0) {

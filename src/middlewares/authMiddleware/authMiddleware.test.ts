@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { getUserTokenMother } from '../../api-auth/test/userTokenMother.js'
+import { getNotExistingUserTokenMother, getUserTokenMother } from '../../api-auth/test/userTokenMother.js'
 import { type Response, type Request } from 'express'
 import { authMiddleware } from './authMiddleware.js'
 import { restartDatabase } from '../../utilities/test/testUtils.js'
@@ -37,9 +37,25 @@ describe('authMiddleware', () => {
   test('Should return unauthorizedError if no user is found and not next', async () => {
     const spy = vi.fn()
     const reqWithouToken = { ...req, cookies: { JWT: '' } } as unknown as Request
-    await expect(authMiddleware(reqWithouToken, res, () => {
-      spy()
-    })).rejects.toThrow(UnautorizedError)
-    expect(spy).toBeCalledTimes(0)
+    await authMiddleware(reqWithouToken, res, (err) => {
+      if (err instanceof UnautorizedError) {
+        spy()
+        expect(err).toBeInstanceOf(UnautorizedError)
+      }
+    })
+    expect(spy).toBeCalledTimes(1)
+  })
+
+  test('Should return unauthorizedError if token is decoded but no user is found', async () => {
+    const spy = vi.fn()
+    const notExistingUserToken = getNotExistingUserTokenMother()
+    const reqWithouToken = { ...req, cookies: { JWT: notExistingUserToken } } as unknown as Request
+    await authMiddleware(reqWithouToken, res, (err) => {
+      if (err instanceof UnautorizedError) {
+        spy()
+        expect(err).toBeInstanceOf(UnautorizedError)
+      }
+    })
+    expect(spy).toBeCalledTimes(1)
   })
 })

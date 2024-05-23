@@ -1,16 +1,21 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { decodeAuthToken } from '../../api-auth/domain/services/securityService/securityService.js'
-import { findUserByEmail } from '../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserById } from '../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
 import { UnautorizedError, getUnauthorizedErrorMessage } from '../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 
-export async function authMiddleware (req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function authMiddleware (req: Request, res: Response, next: NextFunction): Promise<any> {
   try {
     const jwt = req.cookies.JWT as string
+    console.log('jwt')
     const decodedJwt = await decodeAuthToken(jwt)
-    const user = await findUserByEmail(decodedJwt.email)
+    console.log('decodedJwt')
+    const user = await findUserById(decodedJwt.id)
+    if (user === null) {
+      throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
+    }
     req.body.user = user
+    next()
   } catch (error) {
-    throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
+    next(new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized')))
   }
-  next()
 }

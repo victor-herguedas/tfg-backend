@@ -1,3 +1,4 @@
+import { ParsingError, getParsingErrorMessage } from '../../../utilities/errors/ParsingError/ParsingError.js'
 import { generateAuthToken } from '../services/securityService/securityService.js'
 import { AuthTokenPayload } from './AuthTokenPayload/AuthTokenPayload.js'
 
@@ -22,5 +23,20 @@ export class User {
     const authTokenPayload = new AuthTokenPayload('1', this.email)
     const authToken = generateAuthToken(authTokenPayload)
     return authToken
+  }
+
+  static getUserFromAnyObject = (object: any): User => {
+    console.log('getUserFromAnyObject')
+    try {
+      console.log(object)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      const user = new User(object._id, object.email, object.salt, object.password, object.name, object.rols)
+      console.log('pepe')
+      return user
+    } catch (error) {
+      console.log('error')
+      console.log(error.message)
+      throw new ParsingError(getParsingErrorMessage('User'))
+    }
   }
 }

@@ -29,6 +29,11 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
   return user?.toUser() ?? null
 }
 
+export const findUserById = async (id: string): Promise<User | null> => {
+  const user = await UserEntity.findById(id)
+  return user?.toUser() ?? null
+}
+
 // updateUser
 
 // deleteUser
