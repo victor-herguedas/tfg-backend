@@ -38,6 +38,8 @@ describe('POST /auth/register ', () => {
     const resHeadder = res.header['set-cookie'][0]
     const token = resHeadder.split('=')[1].split(';')[0]
     expect(token).toBeTruthy()
+    const tokenName = resHeadder.split('=')[0]
+    expect(tokenName).toBe('JWT')
     const tokenPayload = await decodeAuthToken(token)
     expect((tokenPayload).email).toBe(email)
   })
@@ -82,6 +84,8 @@ describe('POST /auth/login ', () => {
     expect(res.status).toBe(200)
     const resHeadder = res.header['set-cookie'][0]
     const token = resHeadder.split('=')[1].split(';')[0]
+    const tokenName = resHeadder.split('=')[0]
+    expect(tokenName).toBe('JWT')
     expect(token).toBeTruthy()
     const tokenPayload = await decodeAuthToken(token)
     expect((tokenPayload).email).toBe(email)
