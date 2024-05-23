@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import chalk from 'chalk'
 import { MONGO_DB_NAME, MONGO_URI } from '../environment.js'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 
@@ -11,9 +12,20 @@ export const getConnection = async (): Promise<mongoose.Connection> => {
     } else {
       uri = MONGO_URI
     }
+    console.log(`${chalk.blue('Conecting to MongoDB...')}`)
     const connection = mongoose.createConnection(uri, { dbName: MONGO_DB_NAME })
 
-    return connection
+    return await new Promise((resolve, reject) => {
+      connection.once('open', () => {
+        console.log(`${chalk.green('Database connected')}`)
+        resolve(connection)
+      })
+
+      connection.once('error', (err) => {
+        console.error(`${chalk.red('Connection to database error: ', err)}`)
+        reject(err)
+      })
+    })
   } catch (error) {
     console.error(error)
   }

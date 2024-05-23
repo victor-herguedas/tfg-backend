@@ -4,6 +4,6 @@ import { mongodbConnection } from './mongodb.js'
 describe('mongodb', () => {
   test('should connect to mongodb', async () => {
     expect(mongodbConnection).toBeDefined()
-    expect(mongodbConnection.readyState).toBe(2)
+    expect(mongodbConnection.readyState).toBe(1)
   })
 })

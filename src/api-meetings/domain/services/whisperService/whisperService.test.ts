@@ -13,7 +13,7 @@ vi.mock('../../../../utilities/openAI/openAi.js', async (importOriginal) => {
         transcriptions: {
           create: vi.fn(() => {
             return (
-              { text: 'pruebapruebita' }
+              { text: 'This is a placeholder for the paid test.' }
             )
           })
         }
