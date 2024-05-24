@@ -6,16 +6,17 @@ import { UnautorizedError, getUnauthorizedErrorMessage } from '../../utilities/e
 export async function authMiddleware (req: Request, res: Response, next: NextFunction): Promise<any> {
   try {
     const jwt = req.cookies.JWT as string
-    console.log('jwt')
     const decodedJwt = await decodeAuthToken(jwt)
-    console.log('decodedJwt')
+    console.log(decodedJwt)
     const user = await findUserById(decodedJwt.id)
+    console.log(user)
     if (user === null) {
       throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
     }
     req.body.user = user
     next()
   } catch (error) {
+    console.log(error)
     next(new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized')))
   }
 }

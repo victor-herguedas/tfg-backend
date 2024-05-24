@@ -20,7 +20,8 @@ export class User {
     if (this.id === null) {
       throw new Error('User id is null')
     }
-    const authTokenPayload = new AuthTokenPayload('1', this.email)
+    console.log(this.id)
+    const authTokenPayload = new AuthTokenPayload(this.id, this.email)
     const authToken = generateAuthToken(authTokenPayload)
     return authToken
   }

@@ -4,6 +4,7 @@ import req from 'supertest'
 import app from '../../../../index.js'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
+import { findUserByEmail } from '../../secundary/daoAdapters/UserDaoAdapter.js'
 
 describe('POST /auth/register ', () => {
   beforeEach(async () => {
@@ -41,7 +42,11 @@ describe('POST /auth/register ', () => {
     const tokenName = resHeadder.split('=')[0]
     expect(tokenName).toBe('JWT')
     const tokenPayload = await decodeAuthToken(token)
+    console.log(tokenPayload)
     expect((tokenPayload).email).toBe(email)
+
+    const insertedUser = await findUserByEmail(email)
+    expect(tokenPayload.id).toBe(insertedUser?.id)
   })
 
   test('should return 400 if emailAlreadyExist', async () => {
