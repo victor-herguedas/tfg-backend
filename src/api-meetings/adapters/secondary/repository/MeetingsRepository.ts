@@ -48,3 +48,11 @@ export const updateMeeting = async (meeting: Meeting): Promise<Meeting> => {
     throw new DatabaseError()
   }
 }
+
+export const deleteMeetingById = async (id: string): Promise<void> => {
+  try {
+    await MeetingEntity.findByIdAndDelete(id)
+  } catch (error) {
+    throw new DatabaseError()
+  }
+}
