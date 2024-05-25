@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
-import { findMeetingById, saveMeeting, updateMeeting } from './MeetingDaoAdapter.js'
+import { findMeetingById, saveMeeting, updateMeeting } from './MeetingsRepository.js'
 import { findUserByEmail } from '../../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
 
 describe('MeetingDaoAdapterIT', () => {

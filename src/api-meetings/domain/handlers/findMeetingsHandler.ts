@@ -1,4 +1,4 @@
-import { findMeetingsByUserId } from '../../adapters/secondary/daoAdapters/MeetingDaoAdapter.js'
+import { findMeetingsByUserId } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { type Meeting } from '../models/Meeting.js'
 
 export const findMeetingsHandler = async (userId: string): Promise<Meeting[]> => {

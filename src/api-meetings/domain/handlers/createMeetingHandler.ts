@@ -1,7 +1,7 @@
 import { type User } from '../../../api-auth/domain/models/User.js'
 import { type FormFile } from '../../../utilities/serializations/audioSerialization.js'
 import { type CreateMeetingDto } from '../../adapters/primary/dtos/createMeetingDto.js'
-import { saveMeeting, updateMeeting } from '../../adapters/secondary/daoAdapters/MeetingDaoAdapter.js'
+import { saveMeeting, updateMeeting } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { TranscriptionState, type Meeting } from '../models/Meeting.js'
 import { whisperTranscribe } from '../services/whisperService/whisperService.js'
 
