@@ -43,7 +43,6 @@ describe('createMeetingControllerIT.test.ts', () => {
       .post('/meetings')
       .set('Cookie', `JWT=${authToken}`)
       .attach('audio', path.join(testFilesRoute, 'test.mp3'))
-    console.log(res.body)
     expect(res.status).toBe(400)
     expect(res.body.type).toBe('ValidationError')
   })

@@ -28,6 +28,16 @@ export const findMeetingById = async (id: string): Promise<Meeting | null> => {
   }
 }
 
+export const findMeetingsByUserId = async (userId: string): Promise<Meeting[]> => {
+  try {
+    const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
+    const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
+    return meetings
+  } catch (error) {
+    throw new DatabaseError()
+  }
+}
+
 export const updateMeeting = async (meeting: Meeting): Promise<Meeting> => {
   try {
     const meetingEntity = convertMeetingToMeetingEntity(meeting)

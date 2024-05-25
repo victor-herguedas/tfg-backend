@@ -5,13 +5,9 @@ import { createMeetingHandler } from '../../../../domain/handlers/createMeetingH
 
 export const createMeetingPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    console.log('createMeetingPost')
     const authUser = User.getUserFromAnyObject(req.body.user)
-    console.log('auth user')
     const createMeetingDto = await getCreateMeetingDto(req)
-    console.log('createMeetingDto')
     const meeting = await createMeetingHandler(createMeetingDto, authUser)
-    console.log('meeting')
     res.status(202).json(meeting)
   } catch (e) {
     next(e)

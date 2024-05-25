@@ -30,9 +30,7 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
 }
 
 export const findUserById = async (id: string): Promise<User | null> => {
-  console.log('Estp es una prueba')
   const user = await UserEntity.findById(id)
-  console.log('este es el user', user)
   return user?.toUser() ?? null
 }
 

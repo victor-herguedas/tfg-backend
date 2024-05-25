@@ -42,7 +42,6 @@ describe('POST /auth/register ', () => {
     const tokenName = resHeadder.split('=')[0]
     expect(tokenName).toBe('JWT')
     const tokenPayload = await decodeAuthToken(token)
-    console.log(tokenPayload)
     expect((tokenPayload).email).toBe(email)
 
     const insertedUser = await findUserByEmail(email)

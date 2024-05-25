@@ -13,7 +13,6 @@ export const createMeetingHandler = async (createMeetingDto: CreateMeetingDto, u
 
 export const generateAndSaveTranscription = async (meeting: Meeting, audio: FormFile): Promise<Meeting> => {
   try {
-    console.log(audio)
     const transcription = await whisperTranscribe(audio.filepath)
     meeting.transcription = transcription
     meeting.transcriptionState = TranscriptionState.COMPLETED

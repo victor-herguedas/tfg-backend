@@ -27,6 +27,15 @@ const populate = async (): Promise<void> => {
     rols: []
   }).save()
 
+  await new UserEntity({
+    _id: new mongoose.Types.ObjectId('6651a929c99b6216df26fca0'),
+    email: 'notMeetings@test.com',
+    salt: userSalt,
+    password: hashPassword(userPassword, userSalt),
+    name: 'No Meetings',
+    rols: []
+  }).save()
+
   await new MeetingEntity({
     _id: new mongoose.Types.ObjectId('664bbc255926673e7122649f'),
     userId: user1._id,

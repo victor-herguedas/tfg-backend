@@ -57,7 +57,7 @@ export const renameFileWithExtension = (file: FormFile): void => {
     'audio/mpga': '.mpga'
   }
   // Si el archivo tiene ya una extensión, no hacer nada
-  if (path.extname(file.originalFilename) !== '') return
+  if (path.extname(file.filepath) !== '') return
 
   // Extraer la extensión basada en el mimetype del archivo
   const extension = extensionMap[file.mimetype]
