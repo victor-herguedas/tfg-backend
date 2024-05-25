@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import app from '../../../../../index.js'
+import app from '../../../../index.js'
 import req from 'supertest'
-import { getUserTokenMother } from '../../../../../api-auth/test/userTokenMother.js'
-import { restartDatabase } from '../../../../../utilities/test/testUtils.js'
+import { getUserTokenMother } from '../../../../api-auth/test/userTokenMother.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 
 const authToken = getUserTokenMother()
 

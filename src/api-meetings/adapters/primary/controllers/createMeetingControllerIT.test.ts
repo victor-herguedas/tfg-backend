@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import req from 'supertest'
-import app from '../../../../../index.js'
-import { MEDIA_PATH } from '../../../../../utilities/environment.js'
+import app from '../../../../index.js'
+import { MEDIA_PATH } from '../../../../utilities/environment.js'
 import path from 'path'
-import { getUserTokenMother } from '../../../../../api-auth/test/userTokenMother.js'
-import { restartDatabase } from '../../../../../utilities/test/testUtils.js'
+import { getUserTokenMother } from '../../../../api-auth/test/userTokenMother.js'
+import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 
 const testFilesRoute = path.join(MEDIA_PATH, 'test-media')
 const authToken = getUserTokenMother()

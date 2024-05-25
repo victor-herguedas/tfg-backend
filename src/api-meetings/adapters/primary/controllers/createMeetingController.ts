@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { getCreateMeetingDto } from '../../dtos/createMeetingDto.js'
-import { User } from '../../../../../api-auth/domain/models/User.js'
-import { createMeetingHandler } from '../../../../domain/handlers/createMeetingHandler.js'
+import { getCreateMeetingDto } from '../dtos/createMeetingDto.js'
+import { User } from '../../../../api-auth/domain/models/User.js'
+import { createMeetingHandler } from '../../../domain/handlers/createMeetingHandler.js'
 
 export const createMeetingPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
