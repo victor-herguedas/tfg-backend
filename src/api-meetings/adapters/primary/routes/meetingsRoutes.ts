@@ -5,6 +5,7 @@ import { errorHandlerMiddleware } from '../../../../middlewares/errorHandlerMidd
 import { findMeetingsController } from '../controllers/findMeetingsController.js'
 import { findMeetingByIdController } from '../controllers/findMeetingByIdController.js'
 import { deleteMeetingByIdController } from '../controllers/deleteMeetingByIdController.js'
+import { createSummaryController } from '../controllers/createSummaryController.js'
 
 const router = Router()
 
@@ -16,6 +17,8 @@ router.get('/:id', authMiddleware, findMeetingByIdController)
 router.get('/', authMiddleware, findMeetingsController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.delete('/:id', authMiddleware, deleteMeetingByIdController)
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/:id/summary', authMiddleware, createSummaryController)
 
 router.use(errorHandlerMiddleware)
 

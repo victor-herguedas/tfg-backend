@@ -1,7 +1,7 @@
 import fs from 'fs'
-import { openAiSession } from '../../../../utilities/openAI/openAi.js'
-import { OpenAiApiError } from '../../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
-import { PAID_TEST } from '../../../../utilities/environment.js'
+import { openAiSession } from '../../../utilities/openAI/openAi.js'
+import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
+import { PAID_TEST } from '../../../utilities/environment.js'
 
 export const whisperTranscribe = async (filePath: string): Promise<string> => {
   if (PAID_TEST) {

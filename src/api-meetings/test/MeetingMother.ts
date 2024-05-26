@@ -1,4 +1,4 @@
-import { Meeting, TranscriptionState } from '../domain/models/Meeting.js'
+import { Meeting, SummaryState, TranscriptionState } from '../domain/models/Meeting.js'
 
 interface Params {
   id?: string
@@ -6,6 +6,9 @@ interface Params {
   name?: string
   transcription?: string | null
   transcriptionState?: TranscriptionState
+  summary?: string | null
+  summaryState?: SummaryState
+  summaryCreatedAt?: Date | null
   meetingDate?: Date
   createdAt?: Date
 }
@@ -14,8 +17,11 @@ export const getMeetingMother = ({
   id = '123',
   userId = '456',
   name = 'Welcome Meeting',
-  transcription = 'Hola, bienvenidos a la reunion',
+  transcription = 'Hello, welcome to the meeting.',
   transcriptionState = TranscriptionState.IN_PROGRESS,
+  summary = 'In the they say hello.',
+  summaryState = SummaryState.COMPLETED,
+  summaryCreatedAt = new Date('2002-06-24'),
   meetingDate = new Date('2002-06-22'),
   createdAt = new Date('2002-06-22')
 }: Params): Meeting => (new Meeting(
@@ -24,6 +30,9 @@ export const getMeetingMother = ({
   name,
   transcription,
   transcriptionState,
+  summary,
+  summaryState,
+  summaryCreatedAt,
   meetingDate,
   createdAt
 ))

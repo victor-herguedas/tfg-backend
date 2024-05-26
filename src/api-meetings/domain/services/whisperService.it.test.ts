@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { whisperTranscribe } from './whisperService.js'
 import path from 'path'
-import { MEDIA_PATH, PAID_TEST } from '../../../../utilities/environment.js'
+import { MEDIA_PATH, PAID_TEST } from '../../../utilities/environment.js'
+import { whisperTranscribe } from './whisperService.js'
 
 describe('whisper openAi api', () => {
   test('integration whisper', async () => {

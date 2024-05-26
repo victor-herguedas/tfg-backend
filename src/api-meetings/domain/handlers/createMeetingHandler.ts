@@ -3,7 +3,7 @@ import { type FormFile } from '../../../utilities/serializations/audioSerializat
 import { type CreateMeetingDto } from '../../adapters/primary/dtos/createMeetingDto.js'
 import { saveMeeting, updateMeeting } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { TranscriptionState, type Meeting } from '../models/Meeting.js'
-import { whisperTranscribe } from '../services/whisperService/whisperService.js'
+import { whisperTranscribe } from '../services/whisperService.js'
 
 export const createMeetingHandler = async (createMeetingDto: CreateMeetingDto, user: User): Promise<Meeting> => {
   const meeting = await saveMeeting(createMeetingDto.name, createMeetingDto.date, user.id)

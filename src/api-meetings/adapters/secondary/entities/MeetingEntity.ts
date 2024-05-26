@@ -1,6 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { Meeting, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { Meeting, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
   _id: ObjectId
@@ -8,6 +8,9 @@ export interface MeetingEntityInterface extends mongoose.Document {
   name: string
   transcription: string | null
   transcriptionState: TranscriptionState
+  summary: string | null
+  summaryState: SummaryState
+  summaryCreatedAt: Date | null
   meetingDate: Date
   createdAt: Date
 
@@ -19,6 +22,9 @@ const meetingEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   transcription: { type: String },
   transcriptionState: { type: String, required: true },
+  summary: { type: String },
+  summaryState: { type: String },
+  summaryCreatedAt: { type: Date },
   meetingDate: { type: Date, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() }
 })
@@ -36,6 +42,9 @@ meetingEntitySchema.methods.toMeeting = function () {
     meetingEntity.name,
     meetingEntity.transcription,
     meetingEntity.transcriptionState,
+    meetingEntity.summary,
+    meetingEntity.summaryState,
+    meetingEntity.summaryCreatedAt,
     meetingEntity.meetingDate,
     meetingEntity.createdAt
   )
