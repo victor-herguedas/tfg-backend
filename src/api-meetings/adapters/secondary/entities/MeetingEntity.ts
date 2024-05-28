@@ -23,7 +23,7 @@ const meetingEntitySchema = new mongoose.Schema({
   transcription: { type: String },
   transcriptionState: { type: String, required: true },
   summary: { type: String },
-  summaryState: { type: String },
+  summaryState: { type: String, required: true },
   summaryCreatedAt: { type: Date },
   meetingDate: { type: Date, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() }
@@ -57,6 +57,9 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     name: meeting.name,
     transcription: meeting.transcription,
     transcriptionState: meeting.transcriptionState,
+    summary: meeting.summary,
+    summaryState: meeting.summaryState,
+    summaryCreatedAt: meeting.summaryCreatedAt,
     State: meeting.transcriptionState,
     meetingDate: meeting.meetingDate,
     createdAt: meeting.createdAt

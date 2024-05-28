@@ -24,6 +24,7 @@ describe('createMeetingHandler', () => {
     expect(saveMeetingSpy).toHaveBeenCalledTimes(1)
 
     expect(result.name).toBe(meetingDto.name)
+    expect(result.summaryState).toBe('WAITING')
     // expect(result.transcriptionState).toBe(TranscriptionState.IN_PROGRESS)
     expect(result.userId).toBe(user.id)
     expect(result.meetingDate).toBe(meetingDto.date)

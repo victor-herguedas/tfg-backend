@@ -2,7 +2,7 @@ import { mongodbConnection } from '../mongodb/mongodb.js'
 import { UserEntity } from '../../api-auth/adapters/secundary/enitties/UserEntity.js'
 import { generateSalt, hashPassword } from '../../api-auth/domain/services/securityService/securityService.js'
 import { MeetingEntity } from '../../api-meetings/adapters/secondary/entities/MeetingEntity.js'
-import { TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
+import { SummaryState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
 import mongoose from 'mongoose'
 
 export const restartDatabase = async (): Promise<void> => {
@@ -42,6 +42,18 @@ const populate = async (): Promise<void> => {
     name: 'Welcome Meeting',
     transcription: null,
     transcriptionState: TranscriptionState.IN_PROGRESS,
+    summaryState: SummaryState.WAITING,
+    meetingDate: new Date('2002-06-22'),
+    createdAt: new Date('2002-06-22')
+  }).save()
+
+  await new MeetingEntity({
+    _id: new mongoose.Types.ObjectId('665613cf110d408663836770'),
+    userId: user1._id,
+    name: 'Welcome Meeting',
+    transcription: 'This is a transcription',
+    transcriptionState: TranscriptionState.COMPLETED,
+    summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
     createdAt: new Date('2002-06-22')
   }).save()

@@ -16,7 +16,6 @@ describe('deleteMeetingByIdHandler', () => {
 
   test('should delete a meeting', async () => {
     const meeting = await findMeetingById(meetingId)
-    console.log(meeting)
 
     await deleteMeetingByIdHandler(meeting?.id as unknown as string, userId)
 

@@ -20,7 +20,6 @@ describe('Find Meetings Handler', () => {
 
   test('should return an empty list if the user does not have meetings', async () => {
     const userWithoutMeetings = await findUserByEmail('notMeetings@test.com') as unknown as User
-    console.log(userWithoutMeetings)
     const meetings = await findMeetingsHandler(userWithoutMeetings.id)
     expect(meetings.length).toBe(0)
   })

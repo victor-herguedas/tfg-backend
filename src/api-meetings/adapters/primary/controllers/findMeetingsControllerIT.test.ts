@@ -22,7 +22,6 @@ describe('Find Meetings Controller Integration Test', () => {
       .set('Cookie', `JWT=${authToken}`)
     expect(response.status).toBe(200)
     const meetings = response.body
-    console.log(meetings)
     expect(meetings[0].id).toBeDefined()
     expect(meetings[0].createdAt).toBeDefined()
     expect(meetings[0].meetingDate).toBeDefined()

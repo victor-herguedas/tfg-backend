@@ -26,6 +26,7 @@ export const generateChatGptSummary = async (transcription: string): Promise<str
       throw new OpenAiApiError('chatGpt4o: ' + e.message as unknown as string)
     }
   } else {
+    if (transcription === null) throw new Error('Transcription is null')
     return 'This is a placeholder for the paid test.'
   }
 }

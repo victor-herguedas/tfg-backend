@@ -11,6 +11,8 @@ import { DatabaseError } from '../../utilities/errors/DatabaseError/DatabaseErro
 import { EmailAlreadyExistError } from '../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
 import { InternalError } from '../../utilities/errors/InternalError/InternalError.js'
 import { NotFoundError } from '../../utilities/errors/NotFoundError/NotFoundError.js'
+import { ActionAlreadyRunningError } from '../../utilities/errors/ActionAlreadyRuningError/EmailAlreadyExistError.js'
+import { ResourceAlreadyExistError } from '../../utilities/errors/ResourceAlreadyExistError/ResourceAlreadyExistError.js'
 
 export function errorHandlerMiddleware (error: Error, req: Request, res: Response, next: NextFunction): void {
   if (error instanceof NotSupportedFileTypeError) {
@@ -36,6 +38,10 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
     res.status(500).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else if (error instanceof NotFoundError) {
     res.status(404).json(createResponseBodyError({ message: error.message, type: error.type }))
+  } else if (error instanceof ActionAlreadyRunningError) {
+    res.status(409).json(createResponseBodyError({ message: error.message, type: error.name }))
+  } else if (error instanceof ResourceAlreadyExistError) {
+    res.status(409).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else {
     res.status(100).json(createResponseBodyError({ message: error.message, type: 'UnknownErrorType' }))
   }

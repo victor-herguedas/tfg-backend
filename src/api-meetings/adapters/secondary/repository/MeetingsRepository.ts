@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
-import { type Meeting } from '../../../domain/models/Meeting.js'
+import { SummaryState, TranscriptionState, type Meeting } from '../../../domain/models/Meeting.js'
 import { MeetingEntity, convertMeetingToMeetingEntity } from '../entities/MeetingEntity.js'
 
 export const saveMeeting = async (name: string, meetingDate: Date, userId: string): Promise<Meeting> => {
@@ -9,7 +9,8 @@ export const saveMeeting = async (name: string, meetingDate: Date, userId: strin
       name,
       userId: new mongoose.Types.ObjectId(userId),
       transcription: null,
-      transcriptionState: 'IN_PROGRESS',
+      transcriptionState: TranscriptionState.IN_PROGRESS,
+      summaryState: SummaryState.WAITING,
       meetingDate
     }).save()
     return meetingEntity.toMeeting()

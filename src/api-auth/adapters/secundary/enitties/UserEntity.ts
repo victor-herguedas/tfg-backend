@@ -37,7 +37,6 @@ userEntitySchema.methods.toUser = function () {
   const userEntity = this as UserEntityInterface
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const _id = userEntity._id.toString()
-  // console.log('userEntity', userEntity)
 
   return new User(
     _id,
