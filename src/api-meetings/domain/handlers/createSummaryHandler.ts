@@ -12,9 +12,14 @@ export const createSummaryHandler = async (meetingId: string, userId: string): P
   if (meeting === null) throw new NotFoundError(getNotFoundErrorMessage('Meeting: ' + meetingId))
   if (meeting.summaryState === SummaryState.IN_PROGRESS) throw new ActionAlreadyRunningError(getActionAlreadyRunningErrorMessage('Create summary for meeting: ' + meetingId))
   if (meeting.summaryState === SummaryState.COMPLETED) throw new ResourceAlreadyExistError(getResourceAlreadyExistError('Summary for meeting: ' + meetingId))
-
   await updateMeetingWithSummaryState(meeting, SummaryState.IN_PROGRESS)
 
+  generateMeetingSummary(meeting).catch(async (error: any) => {
+    console.log(error)
+  })
+}
+
+const generateMeetingSummary = async (meeting: Meeting): Promise<Meeting> => {
   try {
     const summary = await generateChatGptSummary(meeting.transcription as unknown as string)
     meeting.summary = summary
@@ -24,10 +29,11 @@ export const createSummaryHandler = async (meetingId: string, userId: string): P
     throw new OpenAIError('chatGpt4o: ' + error.message)
   }
 
-  await updateMeetingWithSummaryState(meeting, SummaryState.COMPLETED)
+  return await updateMeetingWithSummaryState(meeting, SummaryState.COMPLETED)
 }
 
 export const updateMeetingWithSummaryState = async (meeting: Meeting, state: SummaryState): Promise<Meeting> => {
+  console.log('Updating meeting with summary state: ' + state)
   meeting.summaryState = state
   meeting = await updateMeeting(meeting)
   return meeting
