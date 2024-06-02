@@ -13,5 +13,5 @@ export const createSummaryController = async (req: Request, res: Response, next:
   }
 }
 
-// test de que existe el id sino mando error
 // test de que entra en profundidad y no lo devuelve antes de tiempo
+// Test de que se crean los summarys

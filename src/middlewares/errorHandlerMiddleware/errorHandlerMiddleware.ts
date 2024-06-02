@@ -43,6 +43,6 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
   } else if (error instanceof ResourceAlreadyExistError) {
     res.status(409).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else {
-    res.status(100).json(createResponseBodyError({ message: error.message, type: 'UnknownErrorType' }))
+    res.status(500).json(createResponseBodyError({ type: 'UnknownErrorType' }))
   }
 }
