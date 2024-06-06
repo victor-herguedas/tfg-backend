@@ -4,6 +4,9 @@ import { generateSalt, hashPassword } from '../../api-auth/domain/services/secur
 import { MeetingEntity } from '../../api-meetings/adapters/secondary/entities/MeetingEntity.js'
 import { SummaryState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
 import mongoose from 'mongoose'
+import { ChatState } from '../../api-meetings/domain/models/Chat.js'
+import { ChatEntity } from '../../api-meetings/adapters/secondary/entities/ChatEntity.js'
+import { MEETING_CHAT_PROMPT } from '../environment.js'
 
 export const restartDatabase = async (): Promise<void> => {
   const collections = await mongodbConnection.db?.listCollections()?.toArray()
@@ -56,5 +59,35 @@ const populate = async (): Promise<void> => {
     summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
     createdAt: new Date('2002-06-22')
+  }).save()
+
+  const chatId = '66620b847bda704c123cda07'
+  await new ChatEntity({
+    _id: new mongoose.Types.ObjectId(chatId),
+    meetingId: new mongoose.Types.ObjectId('665613cf110d408663836770'),
+    chatState: ChatState.WAITING,
+    updatedAt: new Date(),
+    messages: [
+      {
+        role: 'system',
+        text: MEETING_CHAT_PROMPT,
+        createdAt: new Date()
+      },
+      {
+        role: 'system',
+        text: 'This is a transcription',
+        createdAt: new Date()
+      },
+      {
+        role: 'user',
+        text: 'What Hour is it',
+        createdAt: new Date()
+      },
+      {
+        role: 'system',
+        text: 'It is 12:00',
+        createdAt: new Date()
+      }
+    ]
   }).save()
 }

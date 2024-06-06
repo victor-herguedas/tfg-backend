@@ -37,7 +37,7 @@ export function errorHandlerMiddleware (error: Error, req: Request, res: Respons
   } else if (error instanceof InternalError) {
     res.status(500).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else if (error instanceof NotFoundError) {
-    res.status(404).json(createResponseBodyError({ message: error.message, type: error.type }))
+    res.status(409).json(createResponseBodyError({ message: error.message, type: error.type }))
   } else if (error instanceof ActionAlreadyRunningError) {
     res.status(409).json(createResponseBodyError({ message: error.message, type: error.name }))
   } else if (error instanceof ResourceAlreadyExistError) {

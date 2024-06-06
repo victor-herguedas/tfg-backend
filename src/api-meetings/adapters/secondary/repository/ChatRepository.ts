@@ -7,9 +7,9 @@ import { ChatEntity, type MessageEntityInterface } from '../entities/ChatEntity.
 
 export const createChat = async (meeting: Meeting, message: string): Promise<Chat> => {
   try {
-    const chat = await ChatEntity.create({
+    const chat = await new ChatEntity({
       meetingId: meeting.id,
-      chatState: ChatState.WAITING,
+      chatState: ChatState.IN_PROGRESS,
       updatedAt: new Date(),
       messages: [
         {
@@ -28,8 +28,7 @@ export const createChat = async (meeting: Meeting, message: string): Promise<Cha
           createdAt: new Date()
         }
       ]
-    })
-    await chat.save()
+    }).save()
     return chat.toDomain()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)
@@ -40,6 +39,8 @@ export const updateChatConversations = async (chatId: string, role: string, mess
   try {
     const chat = await ChatEntity.findById(chatId)
     if (chat === null) throw new DatabaseError(`Chat with ${chatId} not found`)
+    chat.chatState = ChatState.WAITING
+    chat.updatedAt = new Date()
     chat.messages.push(
       {
         role,
@@ -58,4 +59,10 @@ export const findChatsByMeetingId = async (meetingId: string): Promise<Chat[]> =
   const chats = await ChatEntity.find({ meetingId })
   if (chats === null) return []
   return chats.map(chat => chat.toDomain())
+}
+
+export const findChatById = async (chatId: string): Promise<Chat | null> => {
+  if (!isValidObjectId(chatId)) return null
+  const chat = await ChatEntity.findById(chatId)
+  return chat?.toDomain() ?? null
 }

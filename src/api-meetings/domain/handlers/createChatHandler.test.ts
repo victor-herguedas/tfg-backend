@@ -1,15 +1,13 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { getChatDtoMother } from '../../test/CreateChatDtoMother.js'
-import { createChatHandler } from './createChatHandler.js'
+import { createChatHandler, createChatWithResponse, createInitialChat } from './createChatHandler.js'
 import { findMeetingById } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { MEETING_CHAT_PROMPT } from '../../../utilities/environment.js'
 import { findChatsByMeetingId } from '../../adapters/secondary/repository/ChatRepository.js'
 import { type Meeting } from '../models/Meeting.js'
 import { UnautorizedError } from '../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 import { NotFoundError } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
-
-// Debe llamar a chatGTP para sacar el mensaje y tener 3 chats
 
 describe('createChatHandler', () => {
   const meetingId: string = '665613cf110d408663836770'
@@ -39,6 +37,15 @@ describe('createChatHandler', () => {
     const chatFound = chats.find(c => c.id.toString() === chat.id.toString())
     expect(chatFound?.meetingId.toString()).toBe(meeting.id.toString())
     expect(chatFound?.id.toString()).toBe(chat.id.toString())
+  })
+
+  test('chats should have correct states', async () => {
+    const meeting = await findMeetingById(meetingId) as unknown as Meeting
+    const chat = await createInitialChat(meeting, 'hello')
+    expect(chat.chatState).toBe('IN_PROGRESS')
+
+    const secondChat = await createChatWithResponse(chat.id, 'response')
+    expect(secondChat.chatState).toBe('WAITING')
   })
 
   test('should throw exception if the meeting does not have transcription', async () => {
