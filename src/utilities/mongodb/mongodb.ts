@@ -33,3 +33,7 @@ export const getConnection = async (): Promise<mongoose.Connection> => {
 }
 const mongodbConnection = await getConnection()
 export { mongodbConnection }
+
+export const isValidObjectId = (id: string): boolean => {
+  return mongoose.Types.ObjectId.isValid(id)
+}

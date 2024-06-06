@@ -37,3 +37,11 @@ export const MONGO_URI = mongoUri
 const mongoDbName = process.env.MONGO_DB_NAME
 if (mongoDbName === undefined) throw new Error(envExceptionError('MONGO_DB_NAME'))
 export const MONGO_DB_NAME = mongoDbName
+
+const meetingSummaryPrompt = process.env.MEETING_SUMMARY_PROMPT
+if (meetingSummaryPrompt === undefined) throw new Error(envExceptionError('MEETING_SUMMARY_PROMPT'))
+export const MEETING_SUMMARY_PROMPT = meetingSummaryPrompt
+
+const meetingChatPrompt = process.env.MEETING_CHAT_PROMPT
+if (meetingChatPrompt === undefined) throw new Error(envExceptionError('MEETING_CHAT_PROMPT'))
+export const MEETING_CHAT_PROMPT = meetingChatPrompt

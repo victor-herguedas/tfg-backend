@@ -3,7 +3,6 @@ import { findMeetingsHandler } from './findMeetingsHandler.js'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { findUserByEmail } from '../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
 import { type User } from '../../../api-auth/domain/models/User.js'
-import { DatabaseError } from '../../../utilities/errors/DatabaseError/DatabaseError.js'
 
 describe('Find Meetings Handler', () => {
   let userWithMeetings: User = {} as unknown as User
@@ -24,7 +23,7 @@ describe('Find Meetings Handler', () => {
     expect(meetings.length).toBe(0)
   })
 
-  test('should throw a DatabaseError if the user does not exist', async () => {
-    await expect(findMeetingsHandler('non-existing-user')).rejects.toThrow(DatabaseError)
+  test('should return empty list when userId does not exist', async () => {
+    expect((await findMeetingsHandler('non-existing-user')).toString()).toBe([].toString())
   })
 })

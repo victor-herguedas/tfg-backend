@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
-import { findMeetingById, saveMeeting, updateMeeting } from './MeetingsRepository.js'
+import { findMeetingById, findMeetingsByUserId, saveMeeting, updateMeeting } from './MeetingsRepository.js'
 import { findUserByEmail } from '../../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
 
 describe('MeetingDaoAdapterIT', () => {
@@ -30,5 +30,15 @@ describe('MeetingDaoAdapterIT', () => {
     expect(result.name).toBe('Changed name')
     const changedMeeting = await findMeetingById(meeting.id)
     expect(changedMeeting?.name).toBe('Changed name')
+  })
+
+  test('should return null when meetingId is not an objectId', async () => {
+    const meeting = await findMeetingById('notAnObjectId')
+    expect(meeting).toBe(null)
+  })
+
+  test('should return empty list when meetingByUserId incorrect', async () => {
+    const meeting = await findMeetingsByUserId('wrong')
+    expect(meeting.toString()).toBe([].toString())
   })
 })

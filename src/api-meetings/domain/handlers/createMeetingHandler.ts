@@ -17,7 +17,6 @@ export const generateAndSaveTranscription = async (meeting: Meeting, audio: Form
     meeting.transcription = transcription
     meeting.transcriptionState = TranscriptionState.COMPLETED
   } catch (error) {
-    console.error(error)
     meeting.transcriptionState = TranscriptionState.FAILED
   }
   const savedMeeting = await updateMeeting(meeting)

@@ -7,6 +7,6 @@ export class MissingFileError extends Error {
 
 export const MissingFileErrorType = 'MissingFileError'
 
-export const missingFileErrorMessage = (fileName: string): string => {
+export const getMissingFileErrorMessage = (fileName: string): string => {
   return `Missing file with name ${fileName}.}`
 }

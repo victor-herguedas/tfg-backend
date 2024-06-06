@@ -33,7 +33,6 @@ const generateMeetingSummary = async (meeting: Meeting): Promise<Meeting> => {
 }
 
 export const updateMeetingWithSummaryState = async (meeting: Meeting, state: SummaryState): Promise<Meeting> => {
-  console.log('Updating meeting with summary state: ' + state)
   meeting.summaryState = state
   meeting = await updateMeeting(meeting)
   return meeting

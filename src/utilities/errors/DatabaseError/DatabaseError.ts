@@ -1,6 +1,6 @@
 export class DatabaseError extends Error {
   type = 'InternalError'
-  constructor (message = 'Database error') {
+  constructor (message: string = 'Database error') {
     super(message)
     this.name = 'DatabaseError'
   }

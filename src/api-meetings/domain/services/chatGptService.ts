@@ -1,6 +1,8 @@
-import { PAID_TEST } from '../../../utilities/environment.js'
+import { MEETING_SUMMARY_PROMPT, PAID_TEST } from '../../../utilities/environment.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
+import { type Message } from '../models/Chat.js'
+import { type ChatCompletionMessageParam } from 'openai/src/resources/index.js'
 
 export const generateChatGptSummary = async (transcription: string): Promise<string> => {
   if (PAID_TEST) {
@@ -10,7 +12,7 @@ export const generateChatGptSummary = async (transcription: string): Promise<str
         messages: [
           {
             role: 'system',
-            content: 'You are a highly skilled AI trained in language comprehension and summarization. I would like you to read the following text and summarize it into a concise abstract paragraph. Aim to retain the most important points, providing a coherent and readable summary that could help a person understand the main points of the discussion without needing to read the entire text. Please avoid unnecessary details or tangential points.'
+            content: MEETING_SUMMARY_PROMPT
           },
           {
             role: 'user',
@@ -27,6 +29,33 @@ export const generateChatGptSummary = async (transcription: string): Promise<str
     }
   } else {
     if (transcription === null) throw new Error('Transcription is null')
+    return 'This is a placeholder for the paid test.'
+  }
+}
+
+export const generateChatResponse = async (messages: Message[]): Promise<string> => {
+  if (messages.length === 0) {
+    throw new Error('Messages array is empty')
+  }
+  if (PAID_TEST) {
+    try {
+      const completion = await openAiSession.chat.completions.create({
+        model: 'gpt-4o',
+        messages: messages.map(message => {
+          return {
+            role: message.role,
+            content: message.text
+          }
+        }) as unknown as ChatCompletionMessageParam[]
+      })
+
+      const summary = completion.choices[0].message.content
+      if (summary === null) throw new Error('Summary is null')
+      return summary
+    } catch (e: any) {
+      throw new OpenAiApiError('chatGpt4o: ' + e.message as unknown as string)
+    }
+  } else {
     return 'This is a placeholder for the paid test.'
   }
 }

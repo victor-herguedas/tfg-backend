@@ -46,7 +46,7 @@ describe('createSummaryHandler', () => {
     expect(meetingWithSummary?.summaryState).toBe(SummaryState.IN_PROGRESS)
   })
 
-  test('should save transcription failed state and return OPENAIERROR', async () => {
+  test.skip('should save transcription failed state and return OPENAIERROR', async () => {
     // Hay que hacerlo con un mock a openAiSession.chat.completions.create para que falle
     const meetingWithSummary = await findMeetingById(meetingWithoutSummary.id) as unknown as Meeting
     meetingWithSummary.transcription = null

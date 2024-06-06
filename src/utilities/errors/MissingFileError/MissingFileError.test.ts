@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { missingFileErrorMessage } from './MissingFileError.js'
+import { getMissingFileErrorMessage } from './MissingFileError.js'
 
 describe('NotSupportedFileSizeError tests', () => {
   test('it should return mazSize and actual Size', () => {
-    const message = missingFileErrorMessage('audio')
+    const message = getMissingFileErrorMessage('audio')
     expect(message).toContain('audio')
   })
 })

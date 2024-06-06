@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { isValidObjectId } from 'mongoose'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
 import { SummaryState, TranscriptionState, type Meeting } from '../../../domain/models/Meeting.js'
 import { MeetingEntity, convertMeetingToMeetingEntity } from '../entities/MeetingEntity.js'
@@ -21,6 +21,7 @@ export const saveMeeting = async (name: string, meetingDate: Date, userId: strin
 
 export const findMeetingById = async (id: string): Promise<Meeting | null> => {
   try {
+    if (!isValidObjectId(id)) return null
     const meetingEntity = await MeetingEntity.findById(id)
     const meeting = meetingEntity?.toMeeting()
     return meeting ?? null
@@ -31,6 +32,7 @@ export const findMeetingById = async (id: string): Promise<Meeting | null> => {
 
 export const findMeetingsByUserId = async (userId: string): Promise<Meeting[]> => {
   try {
+    if (!isValidObjectId(userId)) return []
     const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
     const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
     return meetings

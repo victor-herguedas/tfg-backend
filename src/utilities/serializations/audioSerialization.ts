@@ -2,7 +2,7 @@ import { type Request } from 'express'
 import formidable from 'formidable'
 import { NotSupportedFileTypeError, notSupportedFileTypeErrorMessage } from '../errors/NotSupportedFileTypeError/NotSupportedFileTypeError.js'
 import { NotSupportedFileSizeError, notSupportedFileSizeErrorMessage } from '../errors/NotSupportedFileSizeError/NotSupportedFileSizerError.js'
-import { MissingFileError, missingFileErrorMessage } from '../errors/MissingFileError/MissingFileError.js'
+import { MissingFileError, getMissingFileErrorMessage } from '../errors/MissingFileError/MissingFileError.js'
 import { ParsingError, getParsingErrorMessage } from '../errors/ParsingError/ParsingError.js'
 import path from 'path'
 import fs from 'fs'
@@ -102,7 +102,7 @@ export const extractAudioAndFieldsFromRequest = async (req: Request): Promise<Au
       }
       const audios: FormFile[] = files.audio as FormFile[]
       if (audios === undefined || audios.length === 0) {
-        reject(new MissingFileError(missingFileErrorMessage('audio')))
+        reject(new MissingFileError(getMissingFileErrorMessage('audio')))
       } else {
         resolve({ audio: audios[0], fields })
       }

@@ -11,20 +11,22 @@ describe('createChatControllerIT', () => {
     await restartDatabase()
   })
   test('should create a chat', async () => {
+    const meetingId = '665613cf110d408663836770'
     const res = await req(app)
-      .post('/meetings/1/summary/chats')
+      .post(`/meetings/${meetingId}/summary/chats`)
       .set('Cookie', `JWT=${token}`)
       .send({
-        message: 'Hola'
+        message: '¿Qué es lo mas importante de la reunión?'
       })
 
+    console.log(res.body)
+    expect(res.status).toBe(202)
+
     const body = res.body
-    expect(body.chatId).toBeDefined()
+    expect(body.id).toBeDefined()
     expect(body.createdAt).toBeDefined()
     expect(body.updatedAt).toBeDefined()
-    expect(body.meetingId).toBe(1)
-
-    expect(res.status).toBe(202)
+    expect(body.meetingId).toBe(meetingId)
   })
 
   test('should return 401 unauthorized when no token is provided', async () => {
