@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
-import { getChatDtoMother } from '../../test/CreateChatDtoMother.js'
-import { createChatHandler, createChatWithResponse, createInitialChat } from './createChatHandler.js'
+import { getCreateChatDtoMother } from '../../test/CreateChatDtoMother.js'
+import { createChatHandler, addAndSaveResponseToChat, createInitialChat } from './createChatHandler.js'
 import { findMeetingById } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { MEETING_CHAT_PROMPT } from '../../../utilities/environment.js'
-import { findChatsByMeetingId } from '../../adapters/secondary/repository/ChatRepository.js'
+import { findChatsByMeetingId } from '../../adapters/secondary/repository/ChatsRepository.js'
 import { type Meeting } from '../models/Meeting.js'
 import { UnautorizedError } from '../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 import { NotFoundError } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
@@ -20,7 +20,7 @@ describe('createChatHandler', () => {
 
   test('should create a chat', async () => {
     const meeting = await findMeetingById(meetingId) as unknown as Meeting
-    const chatDto = getChatDtoMother({ meetingId })
+    const chatDto = getCreateChatDtoMother({ meetingId })
     const chat = await createChatHandler(userId, chatDto)
     expect(chat).toBeDefined()
     expect(chat.messages.length > 1).toBeTruthy()
@@ -44,22 +44,22 @@ describe('createChatHandler', () => {
     const chat = await createInitialChat(meeting, 'hello')
     expect(chat.chatState).toBe('IN_PROGRESS')
 
-    const secondChat = await createChatWithResponse(chat.id, 'response')
+    const secondChat = await addAndSaveResponseToChat(chat.id, 'response')
     expect(secondChat.chatState).toBe('WAITING')
   })
 
   test('should throw exception if the meeting does not have transcription', async () => {
-    const chatDto = getChatDtoMother({ meetingId: meetingWithouTranscriptionId })
+    const chatDto = getCreateChatDtoMother({ meetingId: meetingWithouTranscriptionId })
     await expect(createChatHandler(userId, chatDto)).rejects.toThrow(NotFoundError)
   })
 
   test('should throw exception if the meeting does not exist', async () => {
-    const chatDto = getChatDtoMother({ meetingId: '66609adbb2dd3bdb39e17045' })
+    const chatDto = getCreateChatDtoMother({ meetingId: '66609adbb2dd3bdb39e17045' })
     await expect(createChatHandler(userId, chatDto)).rejects.toThrow(NotFoundError)
   })
 
   test('should throw exception if the meeting is yours', async () => {
-    const chatDto = getChatDtoMother({ meetingId })
+    const chatDto = getCreateChatDtoMother({ meetingId })
     await expect(createChatHandler(userWithoutMeetingsId, chatDto)).rejects.toThrow(UnautorizedError)
   })
 })

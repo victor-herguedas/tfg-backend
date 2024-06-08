@@ -7,6 +7,7 @@ import { findMeetingByIdController } from '../controllers/findMeetingByIdControl
 import { deleteMeetingByIdController } from '../controllers/deleteMeetingByIdController.js'
 import { createSummaryController } from '../controllers/createSummaryController.js'
 import { createChatController } from '../controllers/createChatController.js'
+import { addChatQuestionController } from '../controllers/addChatQuestionController.js'
 
 const router = Router()
 
@@ -22,6 +23,8 @@ router.delete('/:id', authMiddleware, deleteMeetingByIdController)
 router.post('/:id/summary', authMiddleware, createSummaryController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/:id/summary/chats', authMiddleware, createChatController)
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.put('/:id/summary/chats/:chatId', authMiddleware, addChatQuestionController)
 
 router.use(errorHandlerMiddleware)
 

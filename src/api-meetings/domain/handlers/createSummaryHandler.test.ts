@@ -9,7 +9,7 @@ import { findMeetingById } from '../../adapters/secondary/repository/MeetingsRep
 import { NotFoundError } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
 import { createSummaryHandler, updateMeetingWithSummaryState } from './createSummaryHandler.js'
 import { OpenAIError } from 'openai'
-import { ActionAlreadyRunningError } from '../../../utilities/errors/ActionAlreadyRuningError/EmailAlreadyExistError.js'
+import { ActionAlreadyRunningError } from '../../../utilities/errors/ActionAlreadyRuningError/ActionAlredyRunningError.js'
 import { ResourceAlreadyExistError } from '../../../utilities/errors/ResourceAlreadyExistError/ResourceAlreadyExistError.js'
 import { UnautorizedError } from '../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 

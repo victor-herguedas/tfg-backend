@@ -21,6 +21,7 @@ export const restartDatabase = async (): Promise<void> => {
 const populate = async (): Promise<void> => {
   const userSalt = generateSalt()
   const userPassword = '12345678'
+
   const user1 = await new UserEntity({
     _id: new mongoose.Types.ObjectId('664bbc255926673e7122649e'),
     email: 'exist@test.com',
@@ -50,9 +51,20 @@ const populate = async (): Promise<void> => {
     createdAt: new Date('2002-06-22')
   }).save()
 
-  await new MeetingEntity({
+  const meeting2 = await new MeetingEntity({
     _id: new mongoose.Types.ObjectId('665613cf110d408663836770'),
     userId: user1._id,
+    name: 'Welcome Meeting',
+    transcription: 'This is a transcription',
+    transcriptionState: TranscriptionState.COMPLETED,
+    summaryState: SummaryState.WAITING,
+    meetingDate: new Date('2002-06-22'),
+    createdAt: new Date('2002-06-22')
+  }).save()
+
+  await new MeetingEntity({
+    _id: new mongoose.Types.ObjectId('666442d1a6cfe1fb896c5370'),
+    userId: new mongoose.Types.ObjectId('666442be74edcabb94471753'),
     name: 'Welcome Meeting',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
@@ -64,8 +76,38 @@ const populate = async (): Promise<void> => {
   const chatId = '66620b847bda704c123cda07'
   await new ChatEntity({
     _id: new mongoose.Types.ObjectId(chatId),
-    meetingId: new mongoose.Types.ObjectId('665613cf110d408663836770'),
+    meetingId: meeting2._id,
     chatState: ChatState.WAITING,
+    updatedAt: new Date(),
+    messages: [
+      {
+        role: 'system',
+        text: MEETING_CHAT_PROMPT,
+        createdAt: new Date()
+      },
+      {
+        role: 'system',
+        text: 'This is a transcription',
+        createdAt: new Date()
+      },
+      {
+        role: 'user',
+        text: 'What Hour is it',
+        createdAt: new Date()
+      },
+      {
+        role: 'system',
+        text: 'It is 12:00',
+        createdAt: new Date()
+      }
+    ]
+  }).save()
+
+  const chatId2 = '66642ff1440be060eaee5ff3'
+  await new ChatEntity({
+    _id: new mongoose.Types.ObjectId(chatId2),
+    meetingId: meeting2._id,
+    chatState: ChatState.IN_PROGRESS,
     updatedAt: new Date(),
     messages: [
       {

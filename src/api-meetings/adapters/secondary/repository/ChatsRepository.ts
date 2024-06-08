@@ -35,7 +35,7 @@ export const createChat = async (meeting: Meeting, message: string): Promise<Cha
   }
 }
 
-export const updateChatConversations = async (chatId: string, role: string, message: string): Promise<Chat> => {
+export const addChatConversation = async (chatId: string, role: string, message: string): Promise<Chat> => {
   try {
     const chat = await ChatEntity.findById(chatId)
     if (chat === null) throw new DatabaseError(`Chat with ${chatId} not found`)
@@ -48,6 +48,43 @@ export const updateChatConversations = async (chatId: string, role: string, mess
         createdAt: new Date()
       } as unknown as MessageEntityInterface)
     await chat.save()
+    return chat.toDomain()
+  } catch (error: any) {
+    throw new DatabaseError(error.message as unknown as string)
+  }
+}
+
+interface MessageProps {
+  role: string
+  text: string
+}
+
+export const addChatConversations = async (chatId: string, messages: MessageProps[]): Promise<Chat> => {
+  try {
+    const chat = await ChatEntity.findById(chatId)
+    const updatedMessages: MessageEntityInterface[] = messages.map(message => ({
+      role: message.role,
+      text: message.text,
+      createdAt: new Date()
+    }))
+    if (chat === null) throw new DatabaseError(`Chat with ${chatId} not found`)
+    chat.chatState = ChatState.WAITING
+    chat.updatedAt = new Date()
+    updatedMessages.forEach(message => {
+      chat.messages.push(message)
+    })
+    await chat.save()
+    return chat.toDomain()
+  } catch (error: any) {
+    throw new DatabaseError(error.message as unknown as string)
+  }
+}
+
+export const updateChatState = async (chatId: string, chatState: ChatState): Promise<Chat> => {
+  try {
+    const chat = await ChatEntity.findByIdAndUpdate(chatId, { chatState }, { new: true })
+    if (chat === null) throw new DatabaseError(`Chat with ${chatId} not found`)
+    console.log(chat)
     return chat.toDomain()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)

@@ -2,8 +2,8 @@ import { OpenAIError } from 'openai'
 import { NotFoundError, getNotFoundErrorMessage } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
 import { updateMeeting } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { type Meeting, SummaryState } from '../models/Meeting.js'
-import { generateChatGptSummary } from '../services/chatGptService.js'
-import { ActionAlreadyRunningError, getActionAlreadyRunningErrorMessage } from '../../../utilities/errors/ActionAlreadyRuningError/EmailAlreadyExistError.js'
+import { generateAISummaryService } from '../services/chatGptService.js'
+import { ActionAlreadyRunningError, getActionAlreadyRunningErrorMessage } from '../../../utilities/errors/ActionAlreadyRuningError/ActionAlredyRunningError.js'
 import { ResourceAlreadyExistError, getResourceAlreadyExistError } from '../../../utilities/errors/ResourceAlreadyExistError/ResourceAlreadyExistError.js'
 import { findMeetingByIdSecured } from '../../adapters/secondary/repository/MeetingsSecuredRepository.js'
 
@@ -21,7 +21,7 @@ export const createSummaryHandler = async (meetingId: string, userId: string): P
 
 const generateMeetingSummary = async (meeting: Meeting): Promise<Meeting> => {
   try {
-    const summary = await generateChatGptSummary(meeting.transcription as unknown as string)
+    const summary = await generateAISummaryService(meeting.transcription as unknown as string)
     meeting.summary = summary
   } catch (error: any) {
     meeting.summaryState = SummaryState.FAILED

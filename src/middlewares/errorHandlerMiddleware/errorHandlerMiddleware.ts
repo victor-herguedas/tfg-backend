@@ -11,7 +11,7 @@ import { DatabaseError } from '../../utilities/errors/DatabaseError/DatabaseErro
 import { EmailAlreadyExistError } from '../../utilities/errors/EmailAlreadyExistError/EmailAlreadyExistError.js'
 import { InternalError } from '../../utilities/errors/InternalError/InternalError.js'
 import { NotFoundError } from '../../utilities/errors/NotFoundError/NotFoundError.js'
-import { ActionAlreadyRunningError } from '../../utilities/errors/ActionAlreadyRuningError/EmailAlreadyExistError.js'
+import { ActionAlreadyRunningError } from '../../utilities/errors/ActionAlreadyRuningError/ActionAlredyRunningError.js'
 import { ResourceAlreadyExistError } from '../../utilities/errors/ResourceAlreadyExistError/ResourceAlreadyExistError.js'
 
 export function errorHandlerMiddleware (error: Error, req: Request, res: Response, next: NextFunction): void {

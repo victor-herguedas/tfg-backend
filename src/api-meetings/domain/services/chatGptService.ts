@@ -4,7 +4,7 @@ import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { type Message } from '../models/Chat.js'
 import { type ChatCompletionMessageParam } from 'openai/src/resources/index.js'
 
-export const generateChatGptSummary = async (transcription: string): Promise<string> => {
+export const generateAISummaryService = async (transcription: string): Promise<string> => {
   if (PAID_TEST) {
     try {
       const completion = await openAiSession.chat.completions.create({
@@ -33,7 +33,7 @@ export const generateChatGptSummary = async (transcription: string): Promise<str
   }
 }
 
-export const generateChatResponse = async (messages: Message[]): Promise<string> => {
+export const generateAIChatResponseService = async (messages: Message[]): Promise<string> => {
   if (messages.length === 0) {
     throw new Error('Messages array is empty')
   }

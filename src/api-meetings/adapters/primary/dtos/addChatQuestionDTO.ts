@@ -3,23 +3,26 @@ import vine, { errors } from '@vinejs/vine'
 import { ValidationError, getValidationErrorMessage } from '../../../../utilities/errors/ValidationError/ValidationError.js'
 import { MAX_QUESTION_LENGTH } from '../../../../utilities/environment.js'
 
-export class CreateChatDto {
+export class AddChatQuestionDto {
   constructor (
     public meetingId: string,
-    public message: string
+    public chatId: string,
+    public question: string
   ) {}
 }
 
 const schema = vine.object({
   meetingId: vine.string().trim().minLength(1),
-  message: vine.string().minLength(1).maxLength(MAX_QUESTION_LENGTH)
+  chatId: vine.string().minLength(1),
+  question: vine.string().minLength(1).maxLength(MAX_QUESTION_LENGTH)
 })
 
-export const getCreateChatDto = async (req: Request): Promise<CreateChatDto> => {
+export const getAddChatQuestionDto = async (req: Request): Promise<AddChatQuestionDto> => {
   try {
-    const { message } = req.body
+    const { question } = req.body
     const meetingId = req.params.id
-    const fields = { meetingId, message }
+    const chatId = req.params.chatId
+    const fields = { meetingId, question, chatId }
     const validatedCreateMeetingData = await vine.validate({ schema, data: fields })
     return validatedCreateMeetingData
   } catch (error) {

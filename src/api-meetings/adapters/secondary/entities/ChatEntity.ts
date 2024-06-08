@@ -2,7 +2,7 @@ import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
 import { type ChatState, Chat } from '../../../domain/models/Chat.js'
 
-export interface MessageEntityInterface extends mongoose.Document {
+export interface MessageEntityInterface {
   role: string
   text: string
   createdAt: Date
