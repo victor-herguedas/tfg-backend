@@ -29,7 +29,7 @@ export const createChat = async (meeting: Meeting, message: string): Promise<Cha
         }
       ]
     }).save()
-    return chat.toDomain()
+    return chat.toChat()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)
   }
@@ -48,7 +48,7 @@ export const addChatConversation = async (chatId: string, role: string, message:
         createdAt: new Date()
       } as unknown as MessageEntityInterface)
     await chat.save()
-    return chat.toDomain()
+    return chat.toChat()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)
   }
@@ -74,7 +74,7 @@ export const addChatConversations = async (chatId: string, messages: MessageProp
       chat.messages.push(message)
     })
     await chat.save()
-    return chat.toDomain()
+    return chat.toChat()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)
   }
@@ -84,8 +84,7 @@ export const updateChatState = async (chatId: string, chatState: ChatState): Pro
   try {
     const chat = await ChatEntity.findByIdAndUpdate(chatId, { chatState }, { new: true })
     if (chat === null) throw new DatabaseError(`Chat with ${chatId} not found`)
-    console.log(chat)
-    return chat.toDomain()
+    return chat.toChat()
   } catch (error: any) {
     throw new DatabaseError(error.message as unknown as string)
   }
@@ -95,11 +94,11 @@ export const findChatsByMeetingId = async (meetingId: string): Promise<Chat[]> =
   if (!isValidObjectId(meetingId)) return []
   const chats = await ChatEntity.find({ meetingId })
   if (chats === null) return []
-  return chats.map(chat => chat.toDomain())
+  return chats.map(chat => chat.toChat())
 }
 
 export const findChatById = async (chatId: string): Promise<Chat | null> => {
   if (!isValidObjectId(chatId)) return null
   const chat = await ChatEntity.findById(chatId)
-  return chat?.toDomain() ?? null
+  return chat?.toChat() ?? null
 }

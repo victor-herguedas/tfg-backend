@@ -21,12 +21,12 @@ describe('addChatQuestionController', () => {
     expect(res.status).toBe(202)
   })
 
-  test('should return 409 not found', async () => {
+  test('should return 404 not found', async () => {
     const res = await req(app)
       .put(`/meetings/${meetignId}/summary/chats/1`)
       .set('Cookie', `JWT=${token}`)
       .send({ question: 'question' })
-    expect(res.status).toBe(409)
+    expect(res.status).toBe(404)
   })
 
   test('should return 400 if no correct body', async () => {

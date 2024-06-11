@@ -100,4 +100,8 @@ describe('addChatQuestionHandler', () => {
     const findedChat = await findChatById(addChatQuestionDTO.chatId) as unknown as Chat
     expect(findedChat.chatState).toBe(ChatState.FAILED)
   })
+
+  test('if the meeting is not of the chat should throw an error', async () => {
+    await expect(getChatValidated(chatId, meetingNoChatId)).rejects.toThrow(UnautorizedError)
+  })
 })

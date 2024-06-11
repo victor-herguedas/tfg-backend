@@ -37,6 +37,6 @@ describe('findMeetingByIdController', () => {
       .get('/meetings/6651c377dd11a30cbcad8a8a')
       .set('Cookie', `JWT=${authToken}`)
 
-    expect(res.status).toBe(409)
+    expect(res.status).toBe(404)
   })
 })

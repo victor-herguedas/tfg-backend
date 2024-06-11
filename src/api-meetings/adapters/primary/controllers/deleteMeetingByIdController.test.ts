@@ -31,6 +31,6 @@ describe('deleteMeetingByIdController', () => {
 
   test('should return 404 if meeting not found', async () => {
     const response = await req(app).delete('/meetings/6651c377dd11a30cbcad8a8a').set('Cookie', `JWT=${authToken}`)
-    expect(response.status).toBe(409)
+    expect(response.status).toBe(404)
   })
 })
