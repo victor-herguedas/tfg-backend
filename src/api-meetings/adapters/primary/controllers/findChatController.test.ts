@@ -18,7 +18,7 @@ describe('findChatController', () => {
 
   test('should return a chat', async () => {
     const res = await req(app)
-      .get(`/meetings/${meetingId}/summary/chats/${chatId}`)
+      .get(`/meetings/${meetingId}/chats/${chatId}`)
       .set('Cookie', `JWT=${token}`)
 
     expect(res.status).toBe(200)
@@ -33,14 +33,14 @@ describe('findChatController', () => {
 
   test('should return 401 if not autenticated', async () => {
     const res = await req(app)
-      .get(`/meetings/${meetingId}/summary/chats/${chatId}`)
+      .get(`/meetings/${meetingId}/chats/${chatId}`)
 
     expect(res.status).toBe(401)
   })
 
   test('should return 404 if chat not found', async () => {
     const res = await req(app)
-      .get(`/meetings/${meetingId}/summary/chats/-1`)
+      .get(`/meetings/${meetingId}/chats/-1`)
       .set('Cookie', `JWT=${token}`)
 
     expect(res.status).toBe(404)
@@ -48,7 +48,7 @@ describe('findChatController', () => {
 
   test('should return 404 if meeting not found', async () => {
     const res = await req(app)
-      .get(`/meetings/-1/summary/chats/${chatId}`)
+      .get(`/meetings/-1/summary/${chatId}`)
       .set('Cookie', `JWT=${token}`)
 
     expect(res.status).toBe(404)

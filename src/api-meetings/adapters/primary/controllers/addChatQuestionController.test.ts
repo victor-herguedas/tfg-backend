@@ -15,7 +15,7 @@ describe('addChatQuestionController', () => {
 
   test('should return 202 accepted', async () => {
     const res = await req(app)
-      .put(`/meetings/${meetignId}/summary/chats/${chatId}`)
+      .put(`/meetings/${meetignId}/chats/${chatId}`)
       .set('Cookie', `JWT=${token}`)
       .send({ question: 'question' })
     expect(res.status).toBe(202)
@@ -23,7 +23,7 @@ describe('addChatQuestionController', () => {
 
   test('should return 404 not found', async () => {
     const res = await req(app)
-      .put(`/meetings/${meetignId}/summary/chats/1`)
+      .put(`/meetings/${meetignId}/chats/1`)
       .set('Cookie', `JWT=${token}`)
       .send({ question: 'question' })
     expect(res.status).toBe(404)
@@ -31,20 +31,20 @@ describe('addChatQuestionController', () => {
 
   test('should return 400 if no correct body', async () => {
     const res = await req(app)
-      .put(`/meetings/${meetignId}/summary/chats/${chatId}`)
+      .put(`/meetings/${meetignId}/chats/${chatId}`)
       .set('Cookie', `JWT=${token}`)
       .send({ wrong: 'question' })
     expect(res.status).toBe(400)
   })
 
   test('Should return 401 if no token is provided', async () => {
-    const res = await req(app).put('/meetings/1/summary/chats/1')
+    const res = await req(app).put('/meetings/1/chats/1')
     expect(res.status).toBe(401)
   })
 
   test('Si el chat está en estado IN_PROGRESS se lanza un error', async () => {
     const res = await req(app)
-      .put(`/meetings/${meetignId}/summary/chats/${chatInProgessId}`)
+      .put(`/meetings/${meetignId}/chats/${chatInProgessId}`)
       .set('Cookie', `JWT=${token}`)
       .send({ question: 'question' })
     expect(res.status).toBe(409)

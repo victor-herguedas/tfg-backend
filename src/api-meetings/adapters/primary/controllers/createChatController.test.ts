@@ -13,7 +13,7 @@ describe('createChatControllerIT', () => {
   test('should create a chat', async () => {
     const meetingId = '665613cf110d408663836770'
     const res = await req(app)
-      .post(`/meetings/${meetingId}/summary/chats`)
+      .post(`/meetings/${meetingId}/chats`)
       .set('Cookie', `JWT=${token}`)
       .send({
         message: '¿Qué es lo mas importante de la reunión?'
@@ -24,14 +24,14 @@ describe('createChatControllerIT', () => {
 
   test('should return 401 unauthorized when no token is provided', async () => {
     const res = await req(app)
-      .post('/meetings/1/summary/chats')
+      .post('/meetings/1/chats')
 
     expect(res.status).toBe(401)
   })
 
   test('should return 400 if not corret body', async () => {
     const res = await req(app)
-      .post('/meetings/1/summary/chats')
+      .post('/meetings/1/chats')
       .set('Cookie', `JWT=${token}`)
       .send({
         random: 'random'

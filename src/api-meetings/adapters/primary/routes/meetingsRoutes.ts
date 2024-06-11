@@ -9,6 +9,7 @@ import { createSummaryController } from '../controllers/createSummaryController.
 import { createChatController } from '../controllers/createChatController.js'
 import { addChatQuestionController } from '../controllers/addChatQuestionController.js'
 import { findChatController } from '../controllers/findChatController.js'
+import { findChatsSummarizedController } from '../controllers/findChatsController.js'
 
 const router = Router()
 
@@ -23,11 +24,13 @@ router.delete('/:id', authMiddleware, deleteMeetingByIdController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/:id/summary', authMiddleware, createSummaryController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.post('/:id/summary/chats', authMiddleware, createChatController)
+router.post('/:id/chats', authMiddleware, createChatController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.put('/:id/summary/chats/:chatId', authMiddleware, addChatQuestionController)
+router.put('/:id/chats/:chatId', authMiddleware, addChatQuestionController)
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/:id/summary/chats/:chatId', authMiddleware, findChatController)
+router.get('/:id/chats/:chatId', authMiddleware, findChatController)
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/:id/chats', authMiddleware, findChatsSummarizedController)
 
 router.use(errorHandlerMiddleware)
 
