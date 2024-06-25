@@ -7,8 +7,8 @@ export const createChatController = async (req: Request, res: Response, next: Ne
   try {
     const authUser = User.getUserFromAnyObject(req.body.user)
     const createChatDto = await getCreateChatDto(req)
-    const chat = createChatHandler(authUser.id, createChatDto).catch(next)
-    res.status(202).send(chat)
+    const chat = await createChatHandler(authUser.id, createChatDto).catch(next)
+    res.status(201).send(chat)
   } catch (error) {
     next(error)
   }

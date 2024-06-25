@@ -19,7 +19,11 @@ describe('createChatControllerIT', () => {
         message: '¿Qué es lo mas importante de la reunión?'
       })
 
-    expect(res.status).toBe(202)
+    expect(res.status).toBe(201)
+    expect(res.body.id).toBeDefined()
+    expect(res.body.messages[0]).toBeDefined()
+    expect(res.body.messages[1]).toBeDefined()
+    expect(res.body.messages[2]).toBeDefined()
   })
 
   test('should return 401 unauthorized when no token is provided', async () => {

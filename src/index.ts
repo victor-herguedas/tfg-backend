@@ -6,8 +6,16 @@ import { authRoutes } from './api-auth/adapters/primary/routes/authRoutes.js'
 import bodyParser from 'body-parser'
 import { meetingsRoutes } from './api-meetings/adapters/primary/routes/meetingsRoutes.js'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 const app = express()
+app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
