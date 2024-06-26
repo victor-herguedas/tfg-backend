@@ -30,12 +30,22 @@ export const findMeetingById = async (id: string): Promise<Meeting | null> => {
   }
 }
 
-export const findMeetingsByUserId = async (userId: string): Promise<Meeting[]> => {
+interface FindMeetingsByUserIdProps {
+  name?: string
+}
+
+export const findMeetingsByUserId = async (userId: string, filters?: FindMeetingsByUserIdProps): Promise<Meeting[]> => {
   try {
     if (!isValidObjectId(userId)) return []
-    const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
-    const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
-    return meetings
+    if (filters?.name === undefined) {
+      const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
+      const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
+      return meetings
+    } else {
+      const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId), name: { $regex: filters.name, $options: 'i' } })
+      const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
+      return meetings
+    }
   } catch (error) {
     throw new DatabaseError()
   }

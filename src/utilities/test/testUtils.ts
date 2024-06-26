@@ -54,7 +54,7 @@ const populate = async (): Promise<void> => {
   const meeting2 = await new MeetingEntity({
     _id: new mongoose.Types.ObjectId('665613cf110d408663836770'),
     userId: user1._id,
-    name: 'Welcome Meeting',
+    name: 'Victor Welcome Meeting',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
     summaryState: SummaryState.WAITING,
@@ -65,7 +65,7 @@ const populate = async (): Promise<void> => {
   await new MeetingEntity({
     _id: new mongoose.Types.ObjectId('666442d1a6cfe1fb896c5370'),
     userId: new mongoose.Types.ObjectId('666442be74edcabb94471753'),
-    name: 'Welcome Meeting',
+    name: 'Meeting of victor',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
     summaryState: SummaryState.WAITING,
