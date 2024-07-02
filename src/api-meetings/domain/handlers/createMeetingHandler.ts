@@ -9,7 +9,6 @@ import { whisperTranscribe } from '../services/whisperService.js'
 export const createMeetingHandler = async (createMeetingDto: CreateMeetingDto, user: User): Promise<Meeting> => {
   const meeting = await saveMeeting(createMeetingDto.name, createMeetingDto.date, user.id)
   generateAndSaveTranscription(meeting, createMeetingDto.audio).catch(console.error)
-  generateShortDescription(meeting).catch(console.error)
   return meeting
 }
 
@@ -22,6 +21,7 @@ export const generateAndSaveTranscription = async (meeting: Meeting, audio: Form
     meeting.transcriptionState = TranscriptionState.FAILED
   }
   const savedMeeting = await updateMeeting(meeting)
+  generateShortDescription(meeting).catch(console.error)
   return savedMeeting
 }
 
@@ -37,6 +37,7 @@ export const generateShortDescription = async (meeting: Meeting): Promise<Meetin
     return updatedMeeting
   } catch (error) {
     meeting.shortDescriptionState = ShortDescriptionState.FAILED
+    await updateMeeting(meeting)
     throw error
   }
 }

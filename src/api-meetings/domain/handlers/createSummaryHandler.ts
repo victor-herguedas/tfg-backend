@@ -14,7 +14,7 @@ export const createSummaryHandler = async (meetingId: string, userId: string): P
   if (meeting.summaryState === SummaryState.COMPLETED) throw new ResourceAlreadyExistError(getResourceAlreadyExistError('Summary for meeting: ' + meetingId))
   await updateMeetingWithSummaryState(meeting, SummaryState.IN_PROGRESS)
 
-  generateMeetingSummary(meeting).catch(async (error: any) => {
+  await generateMeetingSummary(meeting).catch(async (error: any) => {
     console.log(error)
   })
 }
