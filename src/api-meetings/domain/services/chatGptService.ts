@@ -1,4 +1,4 @@
-import { MEETING_SUMMARY_PROMPT, PAID_TEST } from '../../../utilities/environment.js'
+import { MEETING_SHORT_SUMMARY_PROMPT, MEETING_SUMMARY_PROMPT, PAID_TEST } from '../../../utilities/environment.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { type Message } from '../models/Chat.js'
@@ -56,6 +56,35 @@ export const generateAIChatResponseService = async (messages: Message[]): Promis
       throw new OpenAiApiError('chatGpt4o: ' + e.message as unknown as string)
     }
   } else {
+    return 'This is a placeholder for the paid test.'
+  }
+}
+
+export const generateAIShortSummaryService = async (summary: string): Promise<string> => {
+  if (PAID_TEST) {
+    try {
+      const completion = await openAiSession.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: MEETING_SHORT_SUMMARY_PROMPT
+          },
+          {
+            role: 'user',
+            content: summary
+          }
+        ]
+      })
+
+      const result = completion.choices[0].message.content
+      if (result === null) throw new Error('Summary is null')
+      return result
+    } catch (e: any) {
+      throw new OpenAiApiError('chatGpt4o: ' + e.message as unknown as string)
+    }
+  } else {
+    if (summary === null) throw new Error('Transcription is null')
     return 'This is a placeholder for the paid test.'
   }
 }

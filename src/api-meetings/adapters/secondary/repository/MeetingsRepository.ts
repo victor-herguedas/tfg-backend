@@ -11,6 +11,7 @@ export const saveMeeting = async (name: string, meetingDate: Date, userId: strin
       transcription: null,
       transcriptionState: TranscriptionState.IN_PROGRESS,
       summaryState: SummaryState.WAITING,
+      shortDescriptionState: SummaryState.WAITING,
       meetingDate
     }).save()
     return meetingEntity.toMeeting()

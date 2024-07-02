@@ -49,3 +49,7 @@ export const MEETING_CHAT_PROMPT = meetingChatPrompt
 const maxQuestionLength = process.env.MAX_QUESTION_LENGTH
 if (maxQuestionLength === undefined) throw new Error(envExceptionError('MAX_QUESTION_LENGTH'))
 export const MAX_QUESTION_LENGTH = parseInt(maxQuestionLength)
+
+const meetingShortSummaryPrompt = process.env.MEETING_SHORT_SUMMARY_PROMPT
+if (meetingShortSummaryPrompt === undefined) throw new Error(envExceptionError('MEETING_SHORT_SUMMARY_PROMPT'))
+export const MEETING_SHORT_SUMMARY_PROMPT = meetingShortSummaryPrompt

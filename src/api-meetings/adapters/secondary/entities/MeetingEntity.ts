@@ -1,6 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { Meeting, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { Meeting, type ShortDescriptionState, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
   _id: ObjectId
@@ -11,6 +11,9 @@ export interface MeetingEntityInterface extends mongoose.Document {
   summary: string | null
   summaryState: SummaryState
   summaryCreatedAt: Date | null
+  shortDescription: string | null
+  shortDescriptionState: ShortDescriptionState
+  shortDescriptionCreatedAt: Date | null
   meetingDate: Date
   createdAt: Date
 
@@ -25,6 +28,9 @@ const meetingEntitySchema = new mongoose.Schema({
   summary: { type: String },
   summaryState: { type: String, required: true },
   summaryCreatedAt: { type: Date },
+  shortDescription: { type: String },
+  shortDescriptionState: { type: String },
+  shortDescriptionCreatedAt: { type: Date },
   meetingDate: { type: Date, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() }
 })
@@ -45,6 +51,9 @@ meetingEntitySchema.methods.toMeeting = function () {
     meetingEntity.summary,
     meetingEntity.summaryState,
     meetingEntity.summaryCreatedAt,
+    meetingEntity.shortDescription,
+    meetingEntity.shortDescriptionState,
+    meetingEntity.shortDescriptionCreatedAt,
     meetingEntity.meetingDate,
     meetingEntity.createdAt
   )
@@ -60,6 +69,9 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     summary: meeting.summary,
     summaryState: meeting.summaryState,
     summaryCreatedAt: meeting.summaryCreatedAt,
+    shortDescription: meeting.shortDescription,
+    shortDescriptionState: meeting.shortDescriptionState,
+    shortDescriptionCreatedAt: meeting.shortDescriptionCreatedAt,
     State: meeting.transcriptionState,
     meetingDate: meeting.meetingDate,
     createdAt: meeting.createdAt

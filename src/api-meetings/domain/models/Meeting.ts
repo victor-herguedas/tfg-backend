@@ -11,6 +11,13 @@ export enum SummaryState {
   FAILED = 'FAILED'
 }
 
+export enum ShortDescriptionState {
+  WAITING = 'WAITING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED'
+}
+
 export class Meeting {
   constructor (
     public readonly id: string,
@@ -22,6 +29,10 @@ export class Meeting {
     public summary: string | null,
     public summaryState: SummaryState,
     public summaryCreatedAt: Date | null,
+
+    public shortDescription: string | null,
+    public shortDescriptionState: ShortDescriptionState,
+    public shortDescriptionCreatedAt: Date | null,
 
     public meetingDate: Date,
     public createdAt: Date

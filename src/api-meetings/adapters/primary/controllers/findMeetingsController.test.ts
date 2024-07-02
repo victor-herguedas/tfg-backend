@@ -12,7 +12,7 @@ describe('Find Meetings Controller Integration Test', () => {
   })
 
   test('should return 401 if not authenticated', async () => {
-    const response = await req(app).get('/meetings')
+    const response = await req(app).get('/meetings?name=')
     expect(response.status).toBe(401)
   })
 
