@@ -1,11 +1,11 @@
-import { MEETING_SHORT_SUMMARY_PROMPT, MEETING_SUMMARY_PROMPT, PAID_TEST } from '../../../utilities/environment.js'
+import { MEETING_SHORT_SUMMARY_PROMPT, MEETING_SUMMARY_PROMPT, USE_REAL_AI_API } from '../../../utilities/environment.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { type Message } from '../models/Chat.js'
 import { type ChatCompletionMessageParam } from 'openai/src/resources/index.js'
 
 export const generateAISummaryService = async (transcription: string): Promise<string> => {
-  if (PAID_TEST) {
+  if (USE_REAL_AI_API) {
     try {
       const completion = await openAiSession.chat.completions.create({
         model: 'gpt-4o',
@@ -37,7 +37,7 @@ export const generateAIChatResponseService = async (messages: Message[]): Promis
   if (messages.length === 0) {
     throw new Error('Messages array is empty')
   }
-  if (PAID_TEST) {
+  if (USE_REAL_AI_API) {
     try {
       const completion = await openAiSession.chat.completions.create({
         model: 'gpt-4o',
@@ -61,7 +61,7 @@ export const generateAIChatResponseService = async (messages: Message[]): Promis
 }
 
 export const generateAIShortSummaryService = async (summary: string): Promise<string> => {
-  if (PAID_TEST) {
+  if (USE_REAL_AI_API) {
     try {
       const completion = await openAiSession.chat.completions.create({
         model: 'gpt-4o',
@@ -86,5 +86,27 @@ export const generateAIShortSummaryService = async (summary: string): Promise<st
   } else {
     if (summary === null) throw new Error('Transcription is null')
     return 'This is a placeholder for the paid test.'
+  }
+}
+
+export const generateAIImage = async (prompt: string): Promise<string> => {
+  if (USE_REAL_AI_API) {
+    try {
+      const response = await openAiSession.images.generate({
+        model: 'dall-e-3',
+        prompt,
+        n: 1,
+        size: '1792x1024'
+      })
+
+      const result = response.data[0].url
+      if (result === undefined) throw new Error('URL is null')
+      return result
+    } catch (e: any) {
+      throw new OpenAiApiError('chatGpt4o: ' + e.message as unknown as string)
+    }
+  } else {
+    if (prompt === null) throw new Error('Prompt is null')
+    return 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg'
   }
 }

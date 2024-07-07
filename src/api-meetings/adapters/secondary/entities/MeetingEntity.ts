@@ -1,6 +1,7 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { Meeting, type ShortDescriptionState, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { ImageState, Meeting, type ShortDescriptionState, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { getFileUrlS3 } from '../repository/S3Repository.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
   _id: ObjectId
@@ -14,10 +15,13 @@ export interface MeetingEntityInterface extends mongoose.Document {
   shortDescription: string | null
   shortDescriptionState: ShortDescriptionState
   shortDescriptionCreatedAt: Date | null
+  imageName: string | null
+  imageState: ImageState
+  imageCreatedAt: Date | null
   meetingDate: Date
   createdAt: Date
 
-  toMeeting: () => Meeting
+  toMeeting: () => Promise<Meeting>
 }
 
 const meetingEntitySchema = new mongoose.Schema({
@@ -29,18 +33,31 @@ const meetingEntitySchema = new mongoose.Schema({
   summaryState: { type: String, required: true },
   summaryCreatedAt: { type: Date },
   shortDescription: { type: String },
-  shortDescriptionState: { type: String },
+  shortDescriptionState: { type: String, required: true },
   shortDescriptionCreatedAt: { type: Date },
+  imageName: { type: String },
+  imageState: { type: String, required: true },
+  imageCreatedAt: { type: Date },
   meetingDate: { type: Date, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() }
 })
 
-meetingEntitySchema.methods.toMeeting = function () {
+meetingEntitySchema.methods.toMeeting = async function (): Promise<Meeting> {
   const meetingEntity = this as MeetingEntityInterface
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const _id = meetingEntity._id.toString()
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const userId = meetingEntity.userId.toString()
+
+  let imageUrl: string | null = null
+
+  try {
+    if (meetingEntity.imageName !== null && meetingEntity.imageState === ImageState.COMPLETED) {
+      imageUrl = await getFileUrlS3(meetingEntity.imageName)
+    }
+  } catch (error) {
+    console.error('Error getting image URL: ', error)
+  }
 
   return new Meeting(
     _id,
@@ -54,6 +71,10 @@ meetingEntitySchema.methods.toMeeting = function () {
     meetingEntity.shortDescription,
     meetingEntity.shortDescriptionState,
     meetingEntity.shortDescriptionCreatedAt,
+    meetingEntity.imageName,
+    imageUrl,
+    meetingEntity.imageState,
+    meetingEntity.imageCreatedAt,
     meetingEntity.meetingDate,
     meetingEntity.createdAt
   )
@@ -73,6 +94,10 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     shortDescriptionState: meeting.shortDescriptionState,
     shortDescriptionCreatedAt: meeting.shortDescriptionCreatedAt,
     State: meeting.transcriptionState,
+    imageName: meeting.imageName,
+    imageUrl: meeting.imageUrl,
+    imageState: meeting.imageState,
+    imageCreatedAt: meeting.imageCreatedAt,
     meetingDate: meeting.meetingDate,
     createdAt: meeting.createdAt
   })

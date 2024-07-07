@@ -2,7 +2,7 @@ import { mongodbConnection } from '../mongodb/mongodb.js'
 import { UserEntity } from '../../api-auth/adapters/secundary/enitties/UserEntity.js'
 import { generateSalt, hashPassword } from '../../api-auth/domain/services/securityService/securityService.js'
 import { MeetingEntity } from '../../api-meetings/adapters/secondary/entities/MeetingEntity.js'
-import { SummaryState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
+import { ImageState, SummaryState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
 import mongoose from 'mongoose'
 import { ChatState } from '../../api-meetings/domain/models/Chat.js'
 import { ChatEntity } from '../../api-meetings/adapters/secondary/entities/ChatEntity.js'
@@ -48,6 +48,8 @@ const populate = async (): Promise<void> => {
     transcriptionState: TranscriptionState.IN_PROGRESS,
     summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
+    shortDescriptionState: SummaryState.WAITING,
+    imageState: ImageState.WAITING,
     createdAt: new Date('2002-06-22')
   }).save()
 
@@ -59,9 +61,12 @@ const populate = async (): Promise<void> => {
     transcriptionState: TranscriptionState.COMPLETED,
     summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
+    shortDescriptionState: SummaryState.WAITING,
+    imageState: ImageState.WAITING,
     createdAt: new Date('2002-06-22')
   }).save()
 
+  // Meeting without shortDescription
   await new MeetingEntity({
     _id: new mongoose.Types.ObjectId('666442d1a6cfe1fb896c5370'),
     userId: new mongoose.Types.ObjectId('666442be74edcabb94471753'),
@@ -69,6 +74,29 @@ const populate = async (): Promise<void> => {
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
     summaryState: SummaryState.WAITING,
+    shortDescriptionState: SummaryState.WAITING,
+    imageState: ImageState.WAITING,
+    meetingDate: new Date('2002-06-22'),
+    createdAt: new Date('2002-06-22')
+  }).save()
+
+  // Meeting without Image
+  await new MeetingEntity({
+    _id: new mongoose.Types.ObjectId('668ae4748488426e8ce25714'),
+    userId: user1._id,
+    name: 'Meeting of victor',
+    transcription: 'This is a transcription',
+    transcriptionState: TranscriptionState.COMPLETED,
+    summary: 'This is a summary',
+    summaryState: SummaryState.COMPLETED,
+    summaryCreatedAt: new Date('2002-06-24'),
+    shortDescription: 'This is a short description',
+    shortDescriptionState: SummaryState.COMPLETED,
+    shortDescriptionCreatedAt: new Date('2002-06-24'),
+    imageName: null,
+    imageUrl: null,
+    imageState: ImageState.WAITING,
+    imageCreatedAt: null,
     meetingDate: new Date('2002-06-22'),
     createdAt: new Date('2002-06-22')
   }).save()

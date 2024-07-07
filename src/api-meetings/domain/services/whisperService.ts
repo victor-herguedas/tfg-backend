@@ -1,10 +1,10 @@
 import fs from 'fs'
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
-import { PAID_TEST } from '../../../utilities/environment.js'
+import { USE_REAL_AI_API } from '../../../utilities/environment.js'
 
 export const whisperTranscribe = async (filePath: string): Promise<string> => {
-  if (PAID_TEST) {
+  if (USE_REAL_AI_API) {
     try {
       const transcription = await openAiSession.audio.transcriptions.create({
         file: fs.createReadStream(filePath),

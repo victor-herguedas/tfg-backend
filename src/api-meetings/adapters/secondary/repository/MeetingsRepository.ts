@@ -12,9 +12,10 @@ export const saveMeeting = async (name: string, meetingDate: Date, userId: strin
       transcriptionState: TranscriptionState.IN_PROGRESS,
       summaryState: SummaryState.WAITING,
       shortDescriptionState: SummaryState.WAITING,
+      imageState: SummaryState.WAITING,
       meetingDate
     }).save()
-    return meetingEntity.toMeeting()
+    return await meetingEntity.toMeeting()
   } catch (error) {
     throw new DatabaseError()
   }
@@ -24,7 +25,7 @@ export const findMeetingById = async (id: string): Promise<Meeting | null> => {
   try {
     if (!isValidObjectId(id)) return null
     const meetingEntity = await MeetingEntity.findById(id)
-    const meeting = meetingEntity?.toMeeting()
+    const meeting = await meetingEntity?.toMeeting()
     return meeting ?? null
   } catch (error) {
     throw new DatabaseError()
@@ -40,11 +41,11 @@ export const findMeetingsByUserId = async (userId: string, filters?: FindMeeting
     if (!isValidObjectId(userId)) return []
     if (filters?.name === undefined) {
       const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
-      const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
+      const meetings = await Promise.all(meetingsEntities.map(async (meetingEntity) => await meetingEntity.toMeeting()))
       return meetings
     } else {
       const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId), name: { $regex: filters.name, $options: 'i' } })
-      const meetings = meetingsEntities.map((meetingEntity) => meetingEntity.toMeeting())
+      const meetings = await Promise.all(meetingsEntities.map(async (meetingEntity) => await meetingEntity.toMeeting()))
       return meetings
     }
   } catch (error) {
@@ -57,7 +58,7 @@ export const updateMeeting = async (meeting: Meeting): Promise<Meeting> => {
     const meetingEntity = convertMeetingToMeetingEntity(meeting)
     meetingEntity.isNew = false
     await meetingEntity.save()
-    return meetingEntity.toMeeting()
+    return await meetingEntity.toMeeting()
   } catch (error) {
     throw new DatabaseError()
   }

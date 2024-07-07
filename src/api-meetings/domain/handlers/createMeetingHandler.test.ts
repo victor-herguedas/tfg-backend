@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { getMeetingDtoMother } from '../../test/MeetingDtoMother.js'
 import { getUserMother } from '../../../api-auth/test/UserMother.js'
-import { type Meeting, TranscriptionState, ShortDescriptionState } from '../models/Meeting.js'
+import { type Meeting, TranscriptionState, ShortDescriptionState, ImageState } from '../models/Meeting.js'
 import * as MeetingDaoAdapterModule from '../../adapters/secondary/repository/MeetingsRepository.js'
-import { createMeetingHandler, generateAndSaveTranscription, generateShortDescription } from './createMeetingHandler.js'
+import { createMeetingHandler, generateAndSaveTranscription, generateImage, generateShortDescription } from './createMeetingHandler.js'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { type FormFile } from '../../../utilities/serializations/audioSerialization.js'
 import path from 'path'
@@ -12,6 +12,8 @@ import { MEDIA_PATH } from '../../../utilities/environment.js'
 describe('createMeetingHandler', () => {
   const saveMeetingSpy = vi.spyOn(MeetingDaoAdapterModule, 'saveMeeting')
   const meetingId = '664bbc255926673e7122649f'
+  const meetingToGenerateImage = '668ae4748488426e8ce25714'
+  const meetingWithoutShortDescription = '666442d1a6cfe1fb896c5370'
   beforeEach(async () => {
     await restartDatabase()
   })
@@ -72,7 +74,29 @@ describe('createMeetingHandler', () => {
     expect(meetingSearch?.shortDescriptionState === ShortDescriptionState.FAILED).toBeTruthy()
   })
 
-  test.skip('Should save the state FAILED when the transcription fails', async () => {
-    'TODO'
+  test('Should generate an image and save it in the database', async () => {
+    const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingToGenerateImage) as unknown as Meeting
+    expect(meeting.imageName).toBe(null)
+    expect(meeting.imageUrl).toBe(null)
+    expect(meeting.imageState).toBe(ImageState.WAITING)
+    expect(meeting.imageCreatedAt).toBe(null)
+
+    await generateImage(meeting)
+
+    const meetingWithImage = await MeetingDaoAdapterModule.findMeetingById(meetingToGenerateImage) as unknown as Meeting
+    expect(meetingWithImage.imageName).toBeDefined()
+    expect(meetingWithImage.imageUrl).toBeDefined()
+    expect(meetingWithImage.imageState).toBe(ImageState.COMPLETED)
+    expect(meetingWithImage.imageCreatedAt).toBeDefined()
+  })
+
+  test('Should throw an error if the short description is not generated', async () => {
+    const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutShortDescription) as unknown as Meeting
+    expect(meeting.shortDescription).toBe(undefined)
+    expect(meeting.shortDescriptionState).toBe(ShortDescriptionState.WAITING)
+    expect(meeting.imageState).toBe(ImageState.WAITING)
+    await expect(generateImage(meeting)).rejects.toThrow()
+    const meetingWIthErrorImage = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutShortDescription) as unknown as Meeting
+    expect(meetingWIthErrorImage.imageState).toBe(ImageState.FAILED)
   })
 })
