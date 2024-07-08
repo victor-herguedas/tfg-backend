@@ -12,7 +12,7 @@ const s3 = new S3Client({
 })
 
 export const saveFileS3 = async (file: Buffer, key: null | string = null): Promise<string> => {
-  const fileKey = key ?? `${Date.now()}-${crypto.randomBytes(8).toString('hex')}.mp4`
+  const fileKey = key ?? `${Date.now()}-${crypto.randomBytes(8).toString('hex')}.jpg`
   const params = {
     Bucket: S3_BUCKET_NAME,
     Key: fileKey,

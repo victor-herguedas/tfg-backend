@@ -48,6 +48,8 @@ export const generateShortDescription = async (meeting: Meeting): Promise<Meetin
 
 export const generateImage = async (meeting: Meeting): Promise<Meeting> => {
   try {
+    meeting.imageState = ImageState.IN_PROGRESS
+    meeting = await updateMeeting(meeting)
     if (meeting.shortDescription === null || meeting.shortDescriptionState !== ShortDescriptionState.COMPLETED) {
       throw new Error('Short description should be generated correctly')
     }

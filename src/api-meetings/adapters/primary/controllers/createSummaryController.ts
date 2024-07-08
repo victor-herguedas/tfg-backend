@@ -6,8 +6,8 @@ export const createSummaryController = async (req: Request, res: Response, next:
   try {
     const authUserId = User.getUserFromAnyObject(req.body.user).id
     const meetingId = req.params.id
-    await createSummaryHandler(meetingId, authUserId).catch(next)
-    res.status(202).send()
+    const summary = await createSummaryHandler(meetingId, authUserId).catch(next)
+    res.status(201).send({ summary })
   } catch (error) {
     next(error)
   }

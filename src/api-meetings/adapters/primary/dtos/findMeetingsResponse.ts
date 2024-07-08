@@ -6,6 +6,10 @@ interface SHortMeetingResponse {
   meetingDate: Date
   name: string
   transcriptionState: string
+  shortDescription: string | null
+  shortDescriptionState: string
+  imageUrl: string | null
+  imageState: string
 }
 
 export class FindMeetingsResponse {
@@ -17,7 +21,11 @@ export class FindMeetingsResponse {
       createdAt: meeting.createdAt,
       meetingDate: meeting.meetingDate,
       name: meeting.name,
-      transcriptionState: meeting.transcriptionState
+      transcriptionState: meeting.transcriptionState,
+      shortDescription: meeting.shortDescription,
+      shortDescriptionState: meeting.shortDescriptionState,
+      imageUrl: meeting.imageUrl,
+      imageState: meeting.imageState
     }))
   }
 }

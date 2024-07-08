@@ -7,16 +7,15 @@ import { ActionAlreadyRunningError, getActionAlreadyRunningErrorMessage } from '
 import { ResourceAlreadyExistError, getResourceAlreadyExistError } from '../../../utilities/errors/ResourceAlreadyExistError/ResourceAlreadyExistError.js'
 import { findMeetingByIdSecured } from '../../adapters/secondary/repository/MeetingsSecuredRepository.js'
 
-export const createSummaryHandler = async (meetingId: string, userId: string): Promise<void> => {
+export const createSummaryHandler = async (meetingId: string, userId: string): Promise<string> => {
   const meeting = await findMeetingByIdSecured(meetingId, userId)
   if (meeting === null) throw new NotFoundError(getNotFoundErrorMessage('Meeting: ' + meetingId))
   if (meeting.summaryState === SummaryState.IN_PROGRESS) throw new ActionAlreadyRunningError(getActionAlreadyRunningErrorMessage('Create summary for meeting: ' + meetingId))
   if (meeting.summaryState === SummaryState.COMPLETED) throw new ResourceAlreadyExistError(getResourceAlreadyExistError('Summary for meeting: ' + meetingId))
   await updateMeetingWithSummaryState(meeting, SummaryState.IN_PROGRESS)
 
-  await generateMeetingSummary(meeting).catch(async (error: any) => {
-    console.log(error)
-  })
+  const finalMeeting = await generateMeetingSummary(meeting)
+  return finalMeeting.summary ?? ''
 }
 
 const generateMeetingSummary = async (meeting: Meeting): Promise<Meeting> => {

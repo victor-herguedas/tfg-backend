@@ -41,6 +41,7 @@ export const findMeetingsByUserId = async (userId: string, filters?: FindMeeting
     if (!isValidObjectId(userId)) return []
     if (filters?.name === undefined) {
       const meetingsEntities = await MeetingEntity.find({ userId: new mongoose.Types.ObjectId(userId) })
+        .sort({ createdAt: -1 })
       const meetings = await Promise.all(meetingsEntities.map(async (meetingEntity) => await meetingEntity.toMeeting()))
       return meetings
     } else {
