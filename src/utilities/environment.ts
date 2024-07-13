@@ -73,3 +73,7 @@ export const S3_SECRET_ACCESS_KEY = s3SecretAccessKey
 const useRealS3Api = process.env.USE_REAL_S3_API
 if (useRealS3Api === undefined) throw new Error(envExceptionError('USE_REAL_S3_API'))
 export const USE_REAL_S3_API: boolean = useRealS3Api === 'true'
+
+const promptForGenerateImagePrompt = process.env.PROMPT_FOR_GENERATE_IMAGE_PROMPT
+if (promptForGenerateImagePrompt === undefined) throw new Error(envExceptionError('PROMPT_FOR_GENERATE_IMAGE_PROMPT'))
+export const PROMPT_FOR_GENERATE_IMAGE_PROMPT = promptForGenerateImagePrompt
