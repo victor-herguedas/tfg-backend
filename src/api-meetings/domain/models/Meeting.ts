@@ -4,13 +4,6 @@ export enum TranscriptionState {
   FAILED = 'FAILED'
 }
 
-export enum SummaryState {
-  WAITING = 'WAITING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED'
-}
-
 export enum ShortDescriptionState {
   WAITING = 'WAITING',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -32,10 +25,6 @@ export class Meeting {
     public name: string,
     public transcription: string | null,
     public transcriptionState: TranscriptionState,
-
-    public summary: string | null,
-    public summaryState: SummaryState,
-    public summaryCreatedAt: Date | null,
 
     public shortDescription: string | null,
     public shortDescriptionState: ShortDescriptionState,

@@ -6,8 +6,6 @@ import { type Meeting } from '../../../domain/models/Meeting.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
 import { ChatState } from '../../../domain/models/Chat.js'
 
-// Si falla openAI hay que poner un failed
-
 describe('createChatHandler', () => {
   const meetingId: string = '664bbc255926673e7122649f'
   const chatId = '66620b847bda704c123cda07'

@@ -31,5 +31,3 @@ export const loginPost = async (req: Request, res: Response, next: NextFunction)
     next(error)
   }
 }
-
-// llamar a si existe el usuario

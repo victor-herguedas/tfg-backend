@@ -2,7 +2,7 @@ import { mongodbConnection } from '../mongodb/mongodb.js'
 import { UserEntity } from '../../api-auth/adapters/secundary/enitties/UserEntity.js'
 import { generateSalt, hashPassword } from '../../api-auth/domain/services/securityService/securityService.js'
 import { MeetingEntity } from '../../api-meetings/adapters/secondary/entities/MeetingEntity.js'
-import { ImageState, SummaryState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
+import { ImageState, ShortDescriptionState, TranscriptionState } from '../../api-meetings/domain/models/Meeting.js'
 import mongoose from 'mongoose'
 import { ChatState } from '../../api-meetings/domain/models/Chat.js'
 import { ChatEntity } from '../../api-meetings/adapters/secondary/entities/ChatEntity.js'
@@ -46,9 +46,8 @@ const populate = async (): Promise<void> => {
     name: 'Welcome Meeting',
     transcription: null,
     transcriptionState: TranscriptionState.IN_PROGRESS,
-    summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
-    shortDescriptionState: SummaryState.WAITING,
+    shortDescriptionState: ShortDescriptionState.WAITING,
     imageState: ImageState.WAITING,
     createdAt: new Date('2002-06-22')
   }).save()
@@ -59,9 +58,8 @@ const populate = async (): Promise<void> => {
     name: 'Victor Welcome Meeting',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
-    summaryState: SummaryState.WAITING,
     meetingDate: new Date('2002-06-22'),
-    shortDescriptionState: SummaryState.WAITING,
+    shortDescriptionState: ShortDescriptionState.WAITING,
     imageState: ImageState.WAITING,
     createdAt: new Date('2002-06-22')
   }).save()
@@ -73,8 +71,7 @@ const populate = async (): Promise<void> => {
     name: 'Meeting of victor',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
-    summaryState: SummaryState.WAITING,
-    shortDescriptionState: SummaryState.WAITING,
+    shortDescriptionState: ShortDescriptionState.WAITING,
     imageState: ImageState.WAITING,
     meetingDate: new Date('2002-06-22'),
     createdAt: new Date('2002-06-22')
@@ -87,11 +84,8 @@ const populate = async (): Promise<void> => {
     name: 'Meeting of victor',
     transcription: 'This is a transcription',
     transcriptionState: TranscriptionState.COMPLETED,
-    summary: 'This is a summary',
-    summaryState: SummaryState.COMPLETED,
-    summaryCreatedAt: new Date('2002-06-24'),
     shortDescription: 'This is a short description',
-    shortDescriptionState: SummaryState.COMPLETED,
+    shortDescriptionState: ShortDescriptionState.COMPLETED,
     shortDescriptionCreatedAt: new Date('2002-06-24'),
     imageName: null,
     imageUrl: null,

@@ -45,12 +45,4 @@ describe('findChatController', () => {
 
     expect(res.status).toBe(404)
   })
-
-  test('should return 404 if meeting not found', async () => {
-    const res = await req(app)
-      .get(`/meetings/-1/summary/${chatId}`)
-      .set('Cookie', `JWT=${token}`)
-
-    expect(res.status).toBe(404)
-  })
 })

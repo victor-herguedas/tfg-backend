@@ -1,6 +1,6 @@
 import { UnautorizedError, getUnauthorizedErrorMessage } from '../../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 import { type LoginUserDto } from '../../../adapters/primary/dtos/loginUserDto/loginUserDto.js'
-import { findUserByEmail } from '../../../adapters/secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserByEmail } from '../../../adapters/secundary/repositorys/UserRepository.js'
 import { type User } from '../../models/User.js'
 import { hashPassword } from '../../services/securityService/securityService.js'
 

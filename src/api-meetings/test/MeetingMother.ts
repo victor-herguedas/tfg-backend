@@ -1,4 +1,4 @@
-import { Meeting, SummaryState, TranscriptionState, ShortDescriptionState, ImageState } from '../domain/models/Meeting.js'
+import { Meeting, TranscriptionState, ShortDescriptionState, ImageState } from '../domain/models/Meeting.js'
 
 interface Params {
   id?: string
@@ -6,16 +6,13 @@ interface Params {
   name?: string
   transcription?: string | null
   transcriptionState?: TranscriptionState
-  summary?: string | null
-  summaryState?: SummaryState
   shortDescription?: string | null
   shortDescriptionState?: ShortDescriptionState
   shortDescriptionCreatedAt?: Date | null
-  summaryCreatedAt?: Date | null
-  imageName: string | null
-  imageUrl: string | null
-  imageState: ImageState
-  imageCreatedAt: Date | null
+  imageName?: string | null
+  imageUrl?: string | null
+  imageState?: ImageState
+  imageCreatedAt?: Date | null
   meetingDate?: Date
   createdAt?: Date
 }
@@ -26,12 +23,9 @@ export const getMeetingMother = ({
   name = 'Welcome Meeting',
   transcription = 'Hello, welcome to the meeting.',
   transcriptionState = TranscriptionState.IN_PROGRESS,
-  summary = 'In the they say hello.',
-  summaryState = SummaryState.COMPLETED,
   shortDescription = 'Hello',
   shortDescriptionState = ShortDescriptionState.COMPLETED,
   shortDescriptionCreatedAt = new Date('2002-06-24'),
-  summaryCreatedAt = new Date('2002-06-24'),
   imageName = 'image-name',
   imageUrl = 'image-url',
   imageState = ImageState.COMPLETED,
@@ -44,9 +38,6 @@ export const getMeetingMother = ({
   name,
   transcription,
   transcriptionState,
-  summary,
-  summaryState,
-  summaryCreatedAt,
   shortDescription,
   shortDescriptionState,
   shortDescriptionCreatedAt,

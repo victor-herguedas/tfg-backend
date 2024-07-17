@@ -1,7 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
 import { type ChatState, Chat } from '../../../domain/models/Chat.js'
-import { ChatSummary } from '../../../domain/models/ChatSummary.js'
 
 export interface MessageEntityInterface {
   role: string
@@ -18,7 +17,6 @@ export interface ChatEntityInterface extends mongoose.Document {
   messages: MessageEntityInterface[]
 
   toChat: () => Chat
-  toChatSummary: () => ChatSummary
 }
 
 const messageEntitySchema = new mongoose.Schema({
@@ -49,22 +47,6 @@ chatEntitySchema.methods.toChat = function () {
     chatEntity.createdAt,
     chatEntity.updatedAt,
     chatEntity.messages
-  )
-}
-
-chatEntitySchema.methods.toChatSummary = function () {
-  const chatEntity = this as ChatEntityInterface
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string
-  const _id = chatEntity._id.toString()
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string
-  const meetingId = chatEntity.meetingId.toString()
-
-  return new ChatSummary(
-    _id,
-    meetingId,
-    chatEntity.chatState,
-    chatEntity.createdAt,
-    chatEntity.updatedAt
   )
 }
 

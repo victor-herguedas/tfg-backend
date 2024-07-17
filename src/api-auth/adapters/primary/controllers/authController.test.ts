@@ -4,7 +4,7 @@ import req from 'supertest'
 import app from '../../../../index.js'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
-import { findUserByEmail } from '../../secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserByEmail } from '../../secundary/repositorys/UserRepository.js'
 
 describe('POST /auth/register ', () => {
   beforeEach(async () => {

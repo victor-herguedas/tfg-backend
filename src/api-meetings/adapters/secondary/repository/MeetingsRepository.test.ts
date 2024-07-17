@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { findMeetingById, findMeetingsByUserId, saveMeeting, updateMeeting } from './MeetingsRepository.js'
-import { findUserByEmail } from '../../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserByEmail } from '../../../../api-auth/adapters/secundary/repositorys/UserRepository.js'
 
 describe('MeetingDaoAdapterIT', () => {
   beforeEach(async () => {

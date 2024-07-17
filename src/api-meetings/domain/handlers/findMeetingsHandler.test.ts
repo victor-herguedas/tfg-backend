@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { findMeetingsHandler } from './findMeetingsHandler.js'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
-import { findUserByEmail } from '../../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserByEmail } from '../../../api-auth/adapters/secundary/repositorys/UserRepository.js'
 import { type User } from '../../../api-auth/domain/models/User.js'
 
 describe('Find Meetings Handler', () => {

@@ -1,6 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { ImageState, Meeting, type ShortDescriptionState, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { ImageState, Meeting, type ShortDescriptionState, type TranscriptionState } from '../../../domain/models/Meeting.js'
 import { getFileUrlS3 } from '../repository/S3Repository.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
@@ -9,9 +9,6 @@ export interface MeetingEntityInterface extends mongoose.Document {
   name: string
   transcription: string | null
   transcriptionState: TranscriptionState
-  summary: string | null
-  summaryState: SummaryState
-  summaryCreatedAt: Date | null
   shortDescription: string | null
   shortDescriptionState: ShortDescriptionState
   shortDescriptionCreatedAt: Date | null
@@ -29,9 +26,6 @@ const meetingEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   transcription: { type: String },
   transcriptionState: { type: String, required: true },
-  summary: { type: String },
-  summaryState: { type: String, required: true },
-  summaryCreatedAt: { type: Date },
   shortDescription: { type: String },
   shortDescriptionState: { type: String, required: true },
   shortDescriptionCreatedAt: { type: Date },
@@ -65,9 +59,6 @@ meetingEntitySchema.methods.toMeeting = async function (): Promise<Meeting> {
     meetingEntity.name,
     meetingEntity.transcription,
     meetingEntity.transcriptionState,
-    meetingEntity.summary,
-    meetingEntity.summaryState,
-    meetingEntity.summaryCreatedAt,
     meetingEntity.shortDescription,
     meetingEntity.shortDescriptionState,
     meetingEntity.shortDescriptionCreatedAt,
@@ -87,9 +78,6 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     name: meeting.name,
     transcription: meeting.transcription,
     transcriptionState: meeting.transcriptionState,
-    summary: meeting.summary,
-    summaryState: meeting.summaryState,
-    summaryCreatedAt: meeting.summaryCreatedAt,
     shortDescription: meeting.shortDescription,
     shortDescriptionState: meeting.shortDescriptionState,
     shortDescriptionCreatedAt: meeting.shortDescriptionCreatedAt,

@@ -3,7 +3,7 @@ import { getNotExistingUserTokenMother, getUserTokenMother } from '../../api-aut
 import { type Response, type Request } from 'express'
 import { authMiddleware } from './authMiddleware.js'
 import { restartDatabase } from '../../utilities/test/testUtils.js'
-import { findUserByEmail } from '../../api-auth/adapters/secundary/daoAdapters/UserDaoAdapter.js'
+import { findUserByEmail } from '../../api-auth/adapters/secundary/repositorys/UserRepository.js'
 import { UnautorizedError } from '../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 
 describe('authMiddleware', () => {
