@@ -57,7 +57,7 @@ describe('createMeetingHandler', () => {
     expect(meeting.summaryState !== null)
     const updatedMeeting = await generateSummary(meeting)
     expect(updatedMeeting.summary !== null).toBeTruthy()
-    expect(updatedMeeting.summaryCreatedAt !== null).toBeTruthy()
+    expect(updatedMeeting.summaryCreatedAt !== undefined).toBeTruthy()
     expect(updatedMeeting.summaryState !== null).toBeTruthy()
   })
 

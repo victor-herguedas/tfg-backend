@@ -36,6 +36,7 @@ export const generateSummary = async (meeting: Meeting): Promise<Meeting> => {
     const summary = await generateAISummaryService(meeting.transcription)
     meeting.summary = summary
     meeting.summaryState = SummaryState.COMPLETED
+    meeting.summaryCreatedAt = new Date()
     const updatedMeeting = await updateMeeting(meeting)
     generateImage(updatedMeeting).catch(console.error)
     return updatedMeeting
