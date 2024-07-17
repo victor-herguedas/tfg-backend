@@ -3,8 +3,8 @@ import { type FormFile } from '../../../utilities/serializations/audioSerializat
 import { type CreateMeetingDto } from '../../adapters/primary/dtos/createMeetingDto.js'
 import { saveMeeting, updateMeeting } from '../../adapters/secondary/repository/MeetingsRepository.js'
 import { saveFileS3 } from '../../adapters/secondary/repository/S3Repository.js'
-import { TranscriptionState, ShortDescriptionState, type Meeting, ImageState } from '../models/Meeting.js'
-import { generateAIImage, generateAIShortSummaryService } from '../services/chatGptService.js'
+import { TranscriptionState, SummaryState, type Meeting, ImageState } from '../models/Meeting.js'
+import { generateAIImage, generateAISummaryService } from '../services/chatGptService.js'
 import { downloadImageToBufferService } from '../services/downloadImageService.js'
 import { whisperTranscribe } from '../services/whisperService.js'
 
@@ -23,24 +23,24 @@ export const generateAndSaveTranscription = async (meeting: Meeting, audio: Form
     meeting.transcriptionState = TranscriptionState.FAILED
   }
   const savedMeeting = await updateMeeting(meeting)
-  generateShortDescription(meeting).catch(console.error)
+  generateSummary(meeting).catch(console.error)
   return savedMeeting
 }
 
-export const generateShortDescription = async (meeting: Meeting): Promise<Meeting> => {
+export const generateSummary = async (meeting: Meeting): Promise<Meeting> => {
   try {
-    meeting.shortDescriptionState = ShortDescriptionState.IN_PROGRESS
+    meeting.summaryState = SummaryState.IN_PROGRESS
     meeting = await updateMeeting(meeting)
-    if (meeting.transcriptionState !== TranscriptionState.COMPLETED) throw new Error('Transcription is not completed and short summary can not be generated')
+    if (meeting.transcriptionState !== TranscriptionState.COMPLETED) throw new Error('Transcription is not completed and summary can not be generated')
     if (meeting.transcription === null) throw new Error('Transcription is null')
-    const shortSummary = await generateAIShortSummaryService(meeting.transcription)
-    meeting.shortDescription = shortSummary
-    meeting.shortDescriptionState = ShortDescriptionState.COMPLETED
+    const summary = await generateAISummaryService(meeting.transcription)
+    meeting.summary = summary
+    meeting.summaryState = SummaryState.COMPLETED
     const updatedMeeting = await updateMeeting(meeting)
     generateImage(updatedMeeting).catch(console.error)
     return updatedMeeting
   } catch (error) {
-    meeting.shortDescriptionState = ShortDescriptionState.FAILED
+    meeting.summaryState = SummaryState.FAILED
     await updateMeeting(meeting)
     throw error
   }
@@ -50,10 +50,10 @@ export const generateImage = async (meeting: Meeting): Promise<Meeting> => {
   try {
     meeting.imageState = ImageState.IN_PROGRESS
     meeting = await updateMeeting(meeting)
-    if (meeting.shortDescription === null || meeting.shortDescriptionState !== ShortDescriptionState.COMPLETED) {
+    if (meeting.summary === null || meeting.summaryState !== SummaryState.COMPLETED) {
       throw new Error('Short description should be generated correctly')
     }
-    const imageUrl = await generateAIImage(meeting.shortDescription)
+    const imageUrl = await generateAIImage(meeting.summary)
     const file = await downloadImageToBufferService(imageUrl)
     const imageName = await saveFileS3(file)
     meeting.imageName = imageName

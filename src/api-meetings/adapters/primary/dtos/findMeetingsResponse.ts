@@ -6,8 +6,8 @@ interface SHortMeetingResponse {
   meetingDate: Date
   name: string
   transcriptionState: string
-  shortDescription: string | null
-  shortDescriptionState: string
+  summary: string | null
+  summaryState: string
   imageUrl: string | null
   imageState: string
 }
@@ -22,8 +22,8 @@ export class FindMeetingsResponse {
       meetingDate: meeting.meetingDate,
       name: meeting.name,
       transcriptionState: meeting.transcriptionState,
-      shortDescription: meeting.shortDescription,
-      shortDescriptionState: meeting.shortDescriptionState,
+      summary: meeting.summary,
+      summaryState: meeting.summaryState,
       imageUrl: meeting.imageUrl,
       imageState: meeting.imageState
     }))

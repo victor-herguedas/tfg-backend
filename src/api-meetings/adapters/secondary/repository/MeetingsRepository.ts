@@ -1,6 +1,6 @@
 import mongoose, { isValidObjectId } from 'mongoose'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
-import { ImageState, ShortDescriptionState, TranscriptionState, type Meeting } from '../../../domain/models/Meeting.js'
+import { ImageState, SummaryState, TranscriptionState, type Meeting } from '../../../domain/models/Meeting.js'
 import { MeetingEntity, convertMeetingToMeetingEntity } from '../entities/MeetingEntity.js'
 
 export const saveMeeting = async (name: string, meetingDate: Date, userId: string): Promise<Meeting> => {
@@ -10,7 +10,7 @@ export const saveMeeting = async (name: string, meetingDate: Date, userId: strin
       userId: new mongoose.Types.ObjectId(userId),
       transcription: null,
       transcriptionState: TranscriptionState.IN_PROGRESS,
-      shortDescriptionState: ShortDescriptionState.WAITING,
+      summaryState: SummaryState.WAITING,
       imageState: ImageState.WAITING,
       meetingDate
     }).save()

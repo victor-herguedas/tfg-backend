@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { getMeetingDtoMother } from '../../test/MeetingDtoMother.js'
 import { getUserMother } from '../../../api-auth/test/UserMother.js'
-import { type Meeting, TranscriptionState, ShortDescriptionState, ImageState } from '../models/Meeting.js'
+import { type Meeting, TranscriptionState, SummaryState, ImageState } from '../models/Meeting.js'
 import * as MeetingDaoAdapterModule from '../../adapters/secondary/repository/MeetingsRepository.js'
-import { createMeetingHandler, generateAndSaveTranscription, generateImage, generateShortDescription } from './createMeetingHandler.js'
+import { createMeetingHandler, generateAndSaveTranscription, generateImage, generateSummary } from './createMeetingHandler.js'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { type FormFile } from '../../../utilities/serializations/audioSerialization.js'
 import path from 'path'
@@ -13,7 +13,7 @@ describe('createMeetingHandler', () => {
   const saveMeetingSpy = vi.spyOn(MeetingDaoAdapterModule, 'saveMeeting')
   const meetingId = '664bbc255926673e7122649f'
   const meetingToGenerateImage = '668ae4748488426e8ce25714'
-  const meetingWithoutShortDescription = '666442d1a6cfe1fb896c5370'
+  const meetingWithoutSummary = '666442d1a6cfe1fb896c5370'
   beforeEach(async () => {
     await restartDatabase()
   })
@@ -26,7 +26,7 @@ describe('createMeetingHandler', () => {
     expect(saveMeetingSpy).toHaveBeenCalledTimes(1)
 
     expect(result.name).toBe(meetingDto.name)
-    expect(result.shortDescriptionState).toBe('WAITING')
+    expect(result.summaryState).toBe('WAITING')
     // expect(result.transcriptionState).toBe(TranscriptionState.IN_PROGRESS)
     expect(result.userId).toBe(user.id)
     expect(result.meetingDate).toBe(meetingDto.date)
@@ -48,30 +48,30 @@ describe('createMeetingHandler', () => {
     expect(findedMeeting?.transcriptionState).toBe(TranscriptionState.COMPLETED)
   })
 
-  test('should generate shortDescription', async () => {
+  test('should generate summary', async () => {
     const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingId) as unknown as Meeting
     meeting.transcriptionState = TranscriptionState.COMPLETED
     meeting.transcription = 'Hello, welcome to the meeting.'
-    expect(meeting.shortDescription === null)
-    expect(meeting.shortDescriptionCreatedAt !== null)
-    expect(meeting.shortDescriptionState !== null)
-    const updatedMeeting = await generateShortDescription(meeting)
-    expect(updatedMeeting.shortDescription !== null).toBeTruthy()
-    expect(updatedMeeting.shortDescriptionCreatedAt !== null).toBeTruthy()
-    expect(updatedMeeting.shortDescriptionState !== null).toBeTruthy()
+    expect(meeting.summary === null)
+    expect(meeting.summaryCreatedAt !== null)
+    expect(meeting.summaryState !== null)
+    const updatedMeeting = await generateSummary(meeting)
+    expect(updatedMeeting.summary !== null).toBeTruthy()
+    expect(updatedMeeting.summaryCreatedAt !== null).toBeTruthy()
+    expect(updatedMeeting.summaryState !== null).toBeTruthy()
   })
 
   test('should throw an error if transcription is not finished', async () => {
     const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingId) as unknown as Meeting
-    meeting.shortDescription = null
-    expect(meeting.shortDescription === null).toBeTruthy()
-    expect(meeting.shortDescriptionCreatedAt !== null).toBeTruthy()
-    expect(meeting.shortDescriptionState !== null).toBeTruthy()
-    await expect(generateShortDescription(meeting)).rejects.toThrow()
+    meeting.summary = null
+    expect(meeting.summary === null).toBeTruthy()
+    expect(meeting.summaryCreatedAt !== null).toBeTruthy()
+    expect(meeting.summaryState !== null).toBeTruthy()
+    await expect(generateSummary(meeting)).rejects.toThrow()
 
     const meetingSearch = await MeetingDaoAdapterModule.findMeetingById(meeting.id)
     console.log(meetingSearch)
-    expect(meetingSearch?.shortDescriptionState === ShortDescriptionState.FAILED).toBeTruthy()
+    expect(meetingSearch?.summaryState === SummaryState.FAILED).toBeTruthy()
   })
 
   test('Should generate an image and save it in the database', async () => {
@@ -91,12 +91,12 @@ describe('createMeetingHandler', () => {
   })
 
   test('Should throw an error if the short description is not generated', async () => {
-    const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutShortDescription) as unknown as Meeting
-    expect(meeting.shortDescription).toBe(undefined)
-    expect(meeting.shortDescriptionState).toBe(ShortDescriptionState.WAITING)
+    const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutSummary) as unknown as Meeting
+    expect(meeting.summary).toBe(undefined)
+    expect(meeting.summaryState).toBe(SummaryState.WAITING)
     expect(meeting.imageState).toBe(ImageState.WAITING)
     await expect(generateImage(meeting)).rejects.toThrow()
-    const meetingWIthErrorImage = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutShortDescription) as unknown as Meeting
+    const meetingWIthErrorImage = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutSummary) as unknown as Meeting
     expect(meetingWIthErrorImage.imageState).toBe(ImageState.FAILED)
   })
 })

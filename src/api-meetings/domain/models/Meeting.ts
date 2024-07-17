@@ -4,7 +4,7 @@ export enum TranscriptionState {
   FAILED = 'FAILED'
 }
 
-export enum ShortDescriptionState {
+export enum SummaryState {
   WAITING = 'WAITING',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
@@ -26,9 +26,9 @@ export class Meeting {
     public transcription: string | null,
     public transcriptionState: TranscriptionState,
 
-    public shortDescription: string | null,
-    public shortDescriptionState: ShortDescriptionState,
-    public shortDescriptionCreatedAt: Date | null,
+    public summary: string | null,
+    public summaryState: SummaryState,
+    public summaryCreatedAt: Date | null,
 
     public imageName: string | null,
     public imageUrl: string | null,

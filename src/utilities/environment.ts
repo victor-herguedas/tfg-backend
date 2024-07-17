@@ -38,10 +38,6 @@ const mongoDbName = process.env.MONGO_DB_NAME
 if (mongoDbName === undefined) throw new Error(envExceptionError('MONGO_DB_NAME'))
 export const MONGO_DB_NAME = mongoDbName
 
-const meetingSummaryPrompt = process.env.MEETING_SUMMARY_PROMPT
-if (meetingSummaryPrompt === undefined) throw new Error(envExceptionError('MEETING_SUMMARY_PROMPT'))
-export const MEETING_SUMMARY_PROMPT = meetingSummaryPrompt
-
 const meetingChatPrompt = process.env.MEETING_CHAT_PROMPT
 if (meetingChatPrompt === undefined) throw new Error(envExceptionError('MEETING_CHAT_PROMPT'))
 export const MEETING_CHAT_PROMPT = meetingChatPrompt
@@ -50,9 +46,9 @@ const maxQuestionLength = process.env.MAX_QUESTION_LENGTH
 if (maxQuestionLength === undefined) throw new Error(envExceptionError('MAX_QUESTION_LENGTH'))
 export const MAX_QUESTION_LENGTH = parseInt(maxQuestionLength)
 
-const meetingShortSummaryPrompt = process.env.MEETING_SHORT_SUMMARY_PROMPT
-if (meetingShortSummaryPrompt === undefined) throw new Error(envExceptionError('MEETING_SHORT_SUMMARY_PROMPT'))
-export const MEETING_SHORT_SUMMARY_PROMPT = meetingShortSummaryPrompt
+const meetingSummaryPrompt = process.env.MEETING_SUMMARY_PROMPT
+if (meetingSummaryPrompt === undefined) throw new Error(envExceptionError('MEETING_SUMMARY_PROMPT'))
+export const MEETING_SUMMARY_PROMPT = meetingSummaryPrompt
 
 const s3BucketName = process.env.S3_BUCKET_NAME
 if (s3BucketName === undefined) throw new Error(envExceptionError('S3_BUCKET_NAME'))

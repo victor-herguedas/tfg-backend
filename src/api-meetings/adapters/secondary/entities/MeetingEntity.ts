@@ -1,6 +1,6 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { ImageState, Meeting, type ShortDescriptionState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { ImageState, Meeting, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
 import { getFileUrlS3 } from '../repository/S3Repository.js'
 
 export interface MeetingEntityInterface extends mongoose.Document {
@@ -9,9 +9,9 @@ export interface MeetingEntityInterface extends mongoose.Document {
   name: string
   transcription: string | null
   transcriptionState: TranscriptionState
-  shortDescription: string | null
-  shortDescriptionState: ShortDescriptionState
-  shortDescriptionCreatedAt: Date | null
+  summary: string | null
+  summaryState: SummaryState
+  summaryCreatedAt: Date | null
   imageName: string | null
   imageState: ImageState
   imageCreatedAt: Date | null
@@ -26,9 +26,9 @@ const meetingEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   transcription: { type: String },
   transcriptionState: { type: String, required: true },
-  shortDescription: { type: String },
-  shortDescriptionState: { type: String, required: true },
-  shortDescriptionCreatedAt: { type: Date },
+  summary: { type: String },
+  summaryState: { type: String, required: true },
+  summaryCreatedAt: { type: Date },
   imageName: { type: String },
   imageState: { type: String, required: true },
   imageCreatedAt: { type: Date },
@@ -59,9 +59,9 @@ meetingEntitySchema.methods.toMeeting = async function (): Promise<Meeting> {
     meetingEntity.name,
     meetingEntity.transcription,
     meetingEntity.transcriptionState,
-    meetingEntity.shortDescription,
-    meetingEntity.shortDescriptionState,
-    meetingEntity.shortDescriptionCreatedAt,
+    meetingEntity.summary,
+    meetingEntity.summaryState,
+    meetingEntity.summaryCreatedAt,
     meetingEntity.imageName,
     imageUrl,
     meetingEntity.imageState,
@@ -78,9 +78,9 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     name: meeting.name,
     transcription: meeting.transcription,
     transcriptionState: meeting.transcriptionState,
-    shortDescription: meeting.shortDescription,
-    shortDescriptionState: meeting.shortDescriptionState,
-    shortDescriptionCreatedAt: meeting.shortDescriptionCreatedAt,
+    summary: meeting.summary,
+    summaryState: meeting.summaryState,
+    summaryCreatedAt: meeting.summaryCreatedAt,
     State: meeting.transcriptionState,
     imageName: meeting.imageName,
     imageUrl: meeting.imageUrl,
