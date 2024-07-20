@@ -1,4 +1,5 @@
 import { PutObjectCommand, S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
+import sharp from 'sharp'
 import { S3_ACCESS_KEY_ID, S3_BUCKET_NAME, S3_BUCKET_REGION, S3_SECRET_ACCESS_KEY } from '../../../../utilities/environment.js'
 import crypto from 'crypto'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -12,11 +13,12 @@ const s3 = new S3Client({
 })
 
 export const saveFileS3 = async (file: Buffer, key: null | string = null): Promise<string> => {
+  const optimizedFile = await sharp(file).toFormat('jpeg', { mozjpeg: true }).toBuffer()
   const fileKey = key ?? `${Date.now()}-${crypto.randomBytes(8).toString('hex')}.jpg`
   const params = {
     Bucket: S3_BUCKET_NAME,
     Key: fileKey,
-    Body: file
+    Body: optimizedFile
   }
   const command = new PutObjectCommand(params)
 

@@ -16,7 +16,7 @@ export interface ChatEntityInterface extends mongoose.Document {
   updatedAt: Date
   messages: MessageEntityInterface[]
 
-  toChat: () => Chat
+  toDomain: () => Chat
 }
 
 const messageEntitySchema = new mongoose.Schema({
@@ -33,7 +33,7 @@ const chatEntitySchema = new mongoose.Schema({
   messages: [messageEntitySchema]
 })
 
-chatEntitySchema.methods.toChat = function () {
+chatEntitySchema.methods.toDomain = function () {
   const chatEntity = this as ChatEntityInterface
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const _id = chatEntity._id.toString()

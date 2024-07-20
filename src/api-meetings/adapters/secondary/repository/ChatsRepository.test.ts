@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { findMeetingById } from './MeetingsRepository.js'
-import { createChat, findChatById, findChatsByMeetingId, addChatConversations } from './ChatsRepository.js'
+import { createChat, findChatById, findChatsByMeetingId, addChatConversations, updateChat } from './ChatsRepository.js'
 import { type Meeting } from '../../../domain/models/Meeting.js'
 import { DatabaseError } from '../../../../utilities/errors/DatabaseError/DatabaseError.js'
-import { ChatState } from '../../../domain/models/Chat.js'
+import { type Chat, ChatState } from '../../../domain/models/Chat.js'
 
 describe('createChatHandler', () => {
   const meetingId: string = '664bbc255926673e7122649f'
@@ -45,5 +45,16 @@ describe('createChatHandler', () => {
     expect(updatedChat.updatedAt.toString()).toBe(date.toString())
     expect(findedMessages !== undefined).toBeTruthy()
     expect(updatedChat.chatState).toBe(ChatState.WAITING)
+  })
+
+  test('should update a chat', async () => {
+    const newMessage = 'should update a chat test'
+    const chat = await findChatById(chatId) as unknown as Chat
+    console.log('chat', chat)
+    chat.messages = []
+    chat.messages.push({ role: 'user', text: newMessage, createdAt: new Date() })
+
+    const updatedChat = await updateChat(chat)
+    expect(updatedChat.messages[0].text).toBe(newMessage)
   })
 })

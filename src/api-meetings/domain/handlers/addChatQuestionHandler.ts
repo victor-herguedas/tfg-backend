@@ -2,30 +2,59 @@ import { ActionAlreadyRunningError, getActionAlreadyRunningErrorMessage } from '
 import { NotFoundError, getNotFoundErrorMessage } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { type AddChatQuestionDto as AddChatQuestionDTO } from '../../adapters/primary/dtos/addChatQuestionDTO.js'
-import { addChatConversations, updateChatState } from '../../adapters/secondary/repository/ChatsRepository.js'
+import { updateChat, updateChatState } from '../../adapters/secondary/repository/ChatsRepository.js'
 import { findChatByIdSecured } from '../../adapters/secondary/repository/ChatsSecuredRepository.js'
 import { findMeetingByIdSecured } from '../../adapters/secondary/repository/MeetingsSecuredRepository.js'
-import { ChatState, type Chat } from '../models/Chat.js'
+import { ChatState, type Message, type Chat } from '../models/Chat.js'
 import { generateAIChatResponseService } from '../services/chatGptService.js'
 
 export const addChatQuestionHandler = async (userId: string, addChatQuestionDTO: AddChatQuestionDTO): Promise<Chat> => {
-  const meeting = await findMeetingByIdSecured(addChatQuestionDTO.meetingId, userId)
-  if (meeting == null) throw new NotFoundError(getNotFoundErrorMessage(`Meeting with ${addChatQuestionDTO.meetingId} not found`))
-  const chat = await getChatValidated(addChatQuestionDTO.chatId, addChatQuestionDTO.meetingId)
-  const chatResponse = await getChatResponse(chat)
-  const chatWithResponse = await addAndSaveResponseToChat(chat.id, addChatQuestionDTO.question, chatResponse)
-  return chatWithResponse
+  await checkChatMeetingExistAndUserPerms(addChatQuestionDTO.meetingId, userId)
+  let chat = await getChat(addChatQuestionDTO.chatId, addChatQuestionDTO.meetingId)
+  chat = await updateChatStatusToInProgress(chat)
+  chat = addQuestionToTheChat(chat, addChatQuestionDTO.question)
+  const chatResponse = await getQuestionResponse(chat, addChatQuestionDTO.question)
+  chat = await addResponseToChat(chat, chatResponse)
+  chat = await updateChatStateToWaiting(chat)
+  chat = await saveChat(chat)
+  return chat
 }
 
-export const getChatValidated = async (chatId: string, meetingId: string): Promise<Chat> => {
-  let chat = await findChatByIdSecured(chatId, meetingId)
+const checkChatMeetingExistAndUserPerms = async (meetingId: string, userId: string): Promise<void> => {
+  const meeting = await findMeetingByIdSecured(meetingId, userId)
+  if (meeting == null) throw new NotFoundError(getNotFoundErrorMessage(`Meeting with ${meetingId} not found`))
+}
+
+export const getChat = async (chatId: string, meetingId: string): Promise<Chat> => {
+  const chat = await findChatByIdSecured(chatId, meetingId)
   if (chat == null) throw new NotFoundError(getNotFoundErrorMessage(`Chat with ${chatId} not found`))
-  if (chat.chatState === 'IN_PROGRESS') throw new ActionAlreadyRunningError(getActionAlreadyRunningErrorMessage('Chat ' + chatId))
+  return chat
+}
+
+const addQuestionToTheChat = (chat: Chat, question: string): Chat => {
+  const newQuestion: Message = { role: 'user', text: question, createdAt: new Date() }
+  chat.messages.push(newQuestion)
+  return chat
+}
+
+const addResponseToChat = async (chat: Chat, response: string): Promise<Chat> => {
+  const newResponse: Message = { role: 'system', text: response, createdAt: new Date() }
+  chat.messages.push(newResponse)
+  return chat
+}
+
+export const updateChatStatusToInProgress = async (chat: Chat): Promise<Chat> => {
+  if (chat.chatState === 'IN_PROGRESS') throw new ActionAlreadyRunningError(getActionAlreadyRunningErrorMessage('Chat ' + chat.id))
   chat = await updateChatState(chat.id, ChatState.IN_PROGRESS)
   return chat
 }
 
-export const getChatResponse = async (chat: Chat): Promise<string> => {
+const updateChatStateToWaiting = async (chat: Chat): Promise<Chat> => {
+  chat.chatState = ChatState.WAITING
+  return chat
+}
+
+export const getQuestionResponse = async (chat: Chat, question: string): Promise<string> => {
   try {
     const response = await generateAIChatResponseService(chat.messages)
     return response
@@ -35,11 +64,6 @@ export const getChatResponse = async (chat: Chat): Promise<string> => {
   }
 }
 
-export const addAndSaveResponseToChat = async (chatId: string, question: string, chatBotResponse: string): Promise<Chat> => {
-  const messages = [
-    { role: 'user', text: question },
-    { role: 'system', text: chatBotResponse }
-  ]
-  const chat = await addChatConversations(chatId, messages)
-  return chat
+const saveChat = async (chat: Chat): Promise<Chat> => {
+  return await updateChat(chat)
 }

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { getAddChatQuestionDtoMother } from '../../test/AddChatQuestionDtoMother.js'
-import { addChatQuestionHandler, getChatValidated } from './addChatQuestionHandler.js'
+import { addChatQuestionHandler, getChat } from './addChatQuestionHandler.js'
 import { NotFoundError } from '../../../utilities/errors/NotFoundError/NotFoundError.js'
 import { UnautorizedError } from '../../../utilities/errors/UnauthorizedError/UnauthorizedError.js'
 import { ActionAlreadyRunningError } from '../../../utilities/errors/ActionAlreadyRuningError/ActionAlredyRunningError.js'
@@ -31,7 +31,6 @@ describe('addChatQuestionHandler', () => {
   const meetingNotUserOwnerId = '666442d1a6cfe1fb896c5370'
 
   const chatId = '66620b847bda704c123cda07'
-  const meetingId = '665613cf110d408663836770'
 
   const meetingNoChatId = '664bbc255926673e7122649f'
   const chatInPrgressId = '66642ff1440be060eaee5ff3'
@@ -84,14 +83,6 @@ describe('addChatQuestionHandler', () => {
     await expect(addChatQuestionHandler(userId, addChatQuestionDTO)).rejects.toThrow(ActionAlreadyRunningError)
   })
 
-  test('chat must be in progress when it starts', async () => {
-    const chatStarted = await getChatValidated(chatId, meetingId)
-    expect(chatStarted.chatState).toBe(ChatState.IN_PROGRESS)
-
-    const findedChat = await findChatById(chatId) as unknown as Chat
-    expect(findedChat.chatState).toBe(ChatState.IN_PROGRESS)
-  })
-
   test('Should update the chat to waiting and Error when the transcription fails', async () => {
     mocks.mock.mockImplementation(() => { throw new Error('Error') })
     const addChatQuestionDTO = getAddChatQuestionDtoMother({})
@@ -102,6 +93,6 @@ describe('addChatQuestionHandler', () => {
   })
 
   test('if the meeting is not of the chat should throw an error', async () => {
-    await expect(getChatValidated(chatId, meetingNoChatId)).rejects.toThrow(UnautorizedError)
+    await expect(getChat(chatId, meetingNoChatId)).rejects.toThrow(UnautorizedError)
   })
 })
