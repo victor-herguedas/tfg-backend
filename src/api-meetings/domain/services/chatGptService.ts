@@ -3,6 +3,8 @@ import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiA
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { type Message } from '../models/Chat.js'
 import { type ChatCompletionMessageParam } from 'openai/src/resources/index.js'
+import { type Todo } from '../models/Meeting.js'
+import { formatTodosService } from './validateTodosService.js'
 
 export const generateAIChatResponseService = async (messages: Message[]): Promise<string> => {
   if (messages.length === 0) {
@@ -108,7 +110,8 @@ const generatePromptForImageGeneration = async (initialText: string): Promise<st
   }
 }
 
-export const generateTodoListJson = async (audioTranscription: string): Promise<string> => {
+export const generateAITodos = async (audioTranscription: string): Promise<Todo[]> => {
+  let stringTodos = '[{"todo": "This is a placeholder for a todo item", "done": false}]'
   if (USE_REAL_AI_API) {
     const completion = await openAiSession.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -126,8 +129,16 @@ export const generateTodoListJson = async (audioTranscription: string): Promise<
 
     const result = completion.choices[0].message.content
     if (result === null) throw new Error('prompt generated is null')
-    return result
-  } else {
-    return '[{"todo": "This is a placeholder for a todo item", "done": false}]'
+    stringTodos = result
   }
+
+  const todos: any = JSON.parse(stringTodos)
+  todos.map((todo: any) => {
+    const id = crypto.randomUUID()
+    todo.id = id
+    return todo
+  })
+
+  const formatedTodos = await formatTodosService(todos)
+  return formatedTodos
 }

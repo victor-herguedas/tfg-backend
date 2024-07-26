@@ -14,7 +14,7 @@ describe('createMeetingControllerIT.test.ts', () => {
     await restartDatabase()
   })
 
-  test('should return a 202 ok accepted and the id of the meeting', async () => {
+  test('should return a meeting', async () => {
     const res = await req(app)
       .post('/meetings')
       .set('Cookie', `JWT=${authToken}`)

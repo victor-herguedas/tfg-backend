@@ -3,7 +3,7 @@ import { getMeetingDtoMother } from '../../test/MeetingDtoMother.js'
 import { getUserMother } from '../../../api-auth/test/UserMother.js'
 import { type Meeting, TranscriptionState, SummaryState, ImageState } from '../models/Meeting.js'
 import * as MeetingDaoAdapterModule from '../../adapters/secondary/repository/MeetingsRepository.js'
-import { createMeetingHandler, generateAndSaveTranscription, generateImage, generateSummary } from './createMeetingHandler.js'
+import { createMeetingHandler, generateAndSaveTranscription, generateImage, generateSummary, generateTodos } from './createMeetingHandler.js'
 import { restartDatabase } from '../../../utilities/test/testUtils.js'
 import { type FormFile } from '../../../utilities/serializations/audioSerialization.js'
 import path from 'path'
@@ -98,5 +98,19 @@ describe('createMeetingHandler', () => {
     await expect(generateImage(meeting)).rejects.toThrow()
     const meetingWIthErrorImage = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutSummary) as unknown as Meeting
     expect(meetingWIthErrorImage.imageState).toBe(ImageState.FAILED)
+  })
+
+  test('Should generate a todo list', async () => {
+    const meeting = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutSummary) as unknown as Meeting
+    expect(meeting.todos.length).toBe(0)
+    expect(meeting.todosState).toBe(SummaryState.WAITING)
+    expect(meeting.todosCreatedAt).toBeUndefined()
+
+    await generateTodos(meeting)
+    const savedMeeting = await MeetingDaoAdapterModule.findMeetingById(meetingWithoutSummary) as unknown as Meeting
+    expect(savedMeeting.todos[0].todo).toBeDefined()
+    expect(savedMeeting.todos[0].done).toBe(false)
+    expect(savedMeeting.todosState).toBe(SummaryState.COMPLETED)
+    expect(savedMeeting.todosCreatedAt).toBeDefined()
   })
 })
