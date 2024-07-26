@@ -1,4 +1,4 @@
-import { MEETING_SUMMARY_PROMPT, PROMPT_FOR_GENERATE_IMAGE_PROMPT, USE_REAL_AI_API } from '../../../utilities/environment.js'
+import { EXTRACT_TODOS_PROMPT, GENERATE_IMAGE_PROMPT, MEETING_SUMMARY_PROMPT, USE_REAL_AI_API } from '../../../utilities/environment.js'
 import { OpenAiApiError } from '../../../utilities/errors/OpenAiApiError/OpenAiApiError.js'
 import { openAiSession } from '../../../utilities/openAI/openAi.js'
 import { type Message } from '../models/Chat.js'
@@ -11,7 +11,7 @@ export const generateAIChatResponseService = async (messages: Message[]): Promis
   if (USE_REAL_AI_API) {
     try {
       const completion = await openAiSession.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         messages: messages.map(message => {
           return {
             role: message.role,
@@ -35,7 +35,7 @@ export const generateAISummaryService = async (text: string): Promise<string> =>
   if (USE_REAL_AI_API) {
     try {
       const completion = await openAiSession.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -63,12 +63,13 @@ export const generateAISummaryService = async (text: string): Promise<string> =>
 export const generateAIImage = async (prompt: string): Promise<string> => {
   if (USE_REAL_AI_API) {
     try {
-      const optiimizedPrompt = await generatePromptForImagegeneration(prompt)
+      const optiimizedPrompt = await generatePromptForImageGeneration(prompt)
       const response = await openAiSession.images.generate({
         model: 'dall-e-3',
         prompt: optiimizedPrompt,
         n: 1,
-        size: '1792x1024'
+        size: '1792x1024',
+        quality: 'standard'
       })
 
       const result = response.data[0].url
@@ -83,14 +84,14 @@ export const generateAIImage = async (prompt: string): Promise<string> => {
   }
 }
 
-const generatePromptForImagegeneration = async (initialText: string): Promise<string> => {
+const generatePromptForImageGeneration = async (initialText: string): Promise<string> => {
   if (USE_REAL_AI_API) {
     const completion = await openAiSession.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
-          content: PROMPT_FOR_GENERATE_IMAGE_PROMPT
+          content: GENERATE_IMAGE_PROMPT
         },
         {
           role: 'user',
@@ -104,5 +105,29 @@ const generatePromptForImagegeneration = async (initialText: string): Promise<st
     return result
   } else {
     return 'This is a placeholder for a image generation prompt.'
+  }
+}
+
+export const generateTodoListJson = async (audioTranscription: string): Promise<string> => {
+  if (USE_REAL_AI_API) {
+    const completion = await openAiSession.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: EXTRACT_TODOS_PROMPT
+        },
+        {
+          role: 'user',
+          content: audioTranscription
+        }
+      ]
+    })
+
+    const result = completion.choices[0].message.content
+    if (result === null) throw new Error('prompt generated is null')
+    return result
+  } else {
+    return '[{"todo": "This is a placeholder for a todo item", "done": false}]'
   }
 }

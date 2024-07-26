@@ -18,6 +18,21 @@ export enum ImageState {
   FAILED = 'FAILED'
 }
 
+export enum TodosState {
+  WAITING = 'WAITING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED'
+}
+
+export class Todo {
+  constructor (
+    public readonly id: string,
+    public todo: string,
+    public done: boolean
+  ) {}
+}
+
 export class Meeting {
   constructor (
     public readonly id: string,
@@ -34,6 +49,10 @@ export class Meeting {
     public imageUrl: string | null,
     public imageState: ImageState,
     public imageCreatedAt: Date | null,
+
+    public todos: Todo[],
+    public todosState: TodosState,
+    public todosCreatedAt: Date | null,
 
     public meetingDate: Date,
     public createdAt: Date

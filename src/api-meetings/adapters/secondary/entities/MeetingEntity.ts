@@ -1,7 +1,13 @@
 import mongoose, { type ObjectId } from 'mongoose'
 import { mongodbConnection } from '../../../../utilities/mongodb/mongodb.js'
-import { ImageState, Meeting, type SummaryState, type TranscriptionState } from '../../../domain/models/Meeting.js'
+import { ImageState, Meeting, type TodosState, type SummaryState, type TranscriptionState, type Todo } from '../../../domain/models/Meeting.js'
 import { getFileUrlS3 } from '../repository/S3Repository.js'
+
+interface TodoEntity {
+  id: string
+  todo: string
+  done: boolean
+}
 
 export interface MeetingEntityInterface extends mongoose.Document {
   _id: ObjectId
@@ -15,11 +21,20 @@ export interface MeetingEntityInterface extends mongoose.Document {
   imageName: string | null
   imageState: ImageState
   imageCreatedAt: Date | null
+  todos: TodoEntity[]
+  todosState: TodosState
+  todosCreatedAt: Date | null
   meetingDate: Date
   createdAt: Date
 
   toMeeting: () => Promise<Meeting>
 }
+
+const todoEntitySchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  todo: { type: String, required: true },
+  done: { type: Boolean, required: true }
+})
 
 const meetingEntitySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.ObjectId, required: true },
@@ -32,6 +47,9 @@ const meetingEntitySchema = new mongoose.Schema({
   imageName: { type: String },
   imageState: { type: String, required: true },
   imageCreatedAt: { type: Date },
+  todos: [todoEntitySchema],
+  todosState: { type: String, required: true },
+  todosCreatedAt: { type: Date },
   meetingDate: { type: Date, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() }
 })
@@ -53,6 +71,17 @@ meetingEntitySchema.methods.toMeeting = async function (): Promise<Meeting> {
     console.error('Error getting image URL: ', error)
   }
 
+  let todos: Todo[] = []
+  if (meetingEntity.todos !== undefined || meetingEntity.todos !== null) {
+    todos = meetingEntity.todos.map((todoEntity) => {
+      return {
+        id: todoEntity.id,
+        todo: todoEntity.todo,
+        done: todoEntity.done
+      }
+    })
+  }
+
   return new Meeting(
     _id,
     userId,
@@ -66,12 +95,26 @@ meetingEntitySchema.methods.toMeeting = async function (): Promise<Meeting> {
     imageUrl,
     meetingEntity.imageState,
     meetingEntity.imageCreatedAt,
+    todos,
+    meetingEntity.todosState,
+    meetingEntity.todosCreatedAt,
     meetingEntity.meetingDate,
     meetingEntity.createdAt
   )
 }
 
 export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityInterface => {
+  let todos: TodoEntity[] = []
+  if (meeting.todos !== undefined || meeting.todos !== null) {
+    todos = meeting.todos.map((todo) => {
+      return {
+        id: todo.id,
+        todo: todo.todo,
+        done: todo.done
+      }
+    })
+  }
+
   const meetingEntity = new MeetingEntity({
     _id: new mongoose.Types.ObjectId(meeting.id),
     userId: new mongoose.Types.ObjectId(meeting.userId),
@@ -86,6 +129,9 @@ export const convertMeetingToMeetingEntity = (meeting: Meeting): MeetingEntityIn
     imageUrl: meeting.imageUrl,
     imageState: meeting.imageState,
     imageCreatedAt: meeting.imageCreatedAt,
+    todos,
+    todosState: meeting.todosState,
+    todosCreatedAt: meeting.todosCreatedAt,
     meetingDate: meeting.meetingDate,
     createdAt: meeting.createdAt
   })

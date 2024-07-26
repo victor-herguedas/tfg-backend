@@ -1,4 +1,4 @@
-import { Meeting, TranscriptionState, SummaryState, ImageState } from '../domain/models/Meeting.js'
+import { Meeting, TranscriptionState, SummaryState, ImageState, type Todo, TodosState } from '../domain/models/Meeting.js'
 
 interface Params {
   id?: string
@@ -13,6 +13,9 @@ interface Params {
   imageUrl?: string | null
   imageState?: ImageState
   imageCreatedAt?: Date | null
+  todos?: Todo[]
+  todosState?: TodosState
+  todosCreatedAt?: Date | null
   meetingDate?: Date
   createdAt?: Date
 }
@@ -29,6 +32,13 @@ export const getMeetingMother = ({
   imageName = 'image-name',
   imageUrl = 'image-url',
   imageState = ImageState.COMPLETED,
+  todos = [{
+    id: '66842c0524b5e7268a8050c8',
+    todo: 'Hello, welcome to the meeting.',
+    done: false
+  }],
+  todosState = TodosState.WAITING,
+  todosCreatedAt = new Date('2002-06-24'),
   imageCreatedAt = new Date('2002-06-24'),
   meetingDate = new Date('2002-06-22'),
   createdAt = new Date('2002-06-22')
@@ -45,6 +55,9 @@ export const getMeetingMother = ({
   imageUrl,
   imageState,
   imageCreatedAt,
+  todos,
+  todosState,
+  todosCreatedAt,
   meetingDate,
   createdAt
 ))
