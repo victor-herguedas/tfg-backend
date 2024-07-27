@@ -34,6 +34,10 @@ export const findUserById = async (id: string): Promise<User | null> => {
   return user?.toUser() ?? null
 }
 
+export const updateUserLastConnection = async (id: string): Promise<void> => {
+  await UserEntity.findByIdAndUpdate(id, { lastConnection: new Date() }, { new: true })
+}
+
 // updateUser
 
 // deleteUser

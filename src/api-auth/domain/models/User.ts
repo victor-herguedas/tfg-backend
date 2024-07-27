@@ -13,7 +13,8 @@ export class User {
     public salt: string,
     public password: string,
     public name: string,
-    public rols: Rol[]
+    public roles: Rol[],
+    public lastConnection: Date | null = null
   ) {}
 
   getAuthToken = (): string => {

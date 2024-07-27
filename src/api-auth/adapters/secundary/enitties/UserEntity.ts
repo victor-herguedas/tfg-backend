@@ -16,6 +16,7 @@ export interface UserEntityInterface extends mongoose.Document {
   createdAt: Date
   updatedAt: Date
   roles: RolEntityInterface[]
+  lastConnection: Date | null
   toUser: () => User
 }
 
@@ -30,7 +31,8 @@ const userEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   createdAt: { type: Date, inmutable: true, default: () => new Date() },
   updatedAt: { type: Date, default: () => new Date() },
-  roles: [RolesEntitySchema]
+  roles: [RolesEntitySchema],
+  lastConnection: { type: Date, default: null }
 })
 
 userEntitySchema.methods.toUser = function () {
@@ -44,7 +46,8 @@ userEntitySchema.methods.toUser = function () {
     userEntity.salt,
     userEntity.password,
     userEntity.name,
-    userEntity.roles
+    userEntity.roles,
+    userEntity.lastConnection
   )
 }
 
