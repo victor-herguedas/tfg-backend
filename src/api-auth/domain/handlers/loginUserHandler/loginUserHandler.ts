@@ -7,9 +7,9 @@ import { hashPassword } from '../../services/securityService/securityService.js'
 export const logInUserHandler = async (userDTO: LoginUserDto): Promise<User> => {
   const user = await findUserByEmail(userDTO.email)
 
-  if (user === null) throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
+  if (user === null) throw new UnautorizedError('Invalid user or password')
   const dtoPasswordHashed = hashPassword(userDTO.password, user.salt)
 
-  if (dtoPasswordHashed !== user.password) throw new UnautorizedError(getUnauthorizedErrorMessage('Unauthorized'))
+  if (dtoPasswordHashed !== user.password) throw new UnautorizedError('Invalid user or password')
   return user
 }

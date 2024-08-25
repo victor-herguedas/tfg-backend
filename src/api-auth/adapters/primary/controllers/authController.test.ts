@@ -6,7 +6,6 @@ import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
 import { findUserByEmail } from '../../secundary/repositorys/UserRepository.js'
 import { REGISTER_CODE } from '../../../../utilities/environment.js'
-import { register } from 'module'
 
 describe('POST /auth/register ', () => {
   beforeEach(async () => {
