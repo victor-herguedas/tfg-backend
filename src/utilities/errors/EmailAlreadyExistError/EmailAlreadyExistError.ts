@@ -6,5 +6,5 @@ export class EmailAlreadyExistError extends Error {
 }
 
 export const getEmailAlreadyExistErrorMessage = (emailName: string): string => {
-  return `${emailName} already in use.}`
+  return `${emailName} already in use`
 }
