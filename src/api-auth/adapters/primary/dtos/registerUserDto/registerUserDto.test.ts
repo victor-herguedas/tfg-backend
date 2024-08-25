@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { getRegisterUserDto } from './registerUserDto.js'
 import { type Request } from 'express'
 import { ValidationError } from '../../../../../utilities/errors/ValidationError/ValidationError.js'
+import { REGISTER_CODE } from '../../../../../utilities/environment.js'
 interface FakeRequest {
   body: {
     email: string
@@ -14,7 +15,8 @@ interface FakeRequest {
 const defaultBody = {
   email: 'victor@gmail.com',
   password: '123456',
-  name: 'Victor'
+  name: 'Victor',
+  registerCode: REGISTER_CODE
 }
 
 const request: FakeRequest = {

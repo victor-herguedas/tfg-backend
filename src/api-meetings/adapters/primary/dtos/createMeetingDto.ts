@@ -16,7 +16,7 @@ export class CreateMeetingDto {
 }
 
 const schema = vine.object({
-  name: vine.string().trim().minLength(1).maxLength(30),
+  name: vine.string().trim().minLength(1).maxLength(60),
   date: vine.date()
 })
 

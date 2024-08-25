@@ -1,13 +1,13 @@
-export interface Message {
-  role: string
-  text: string
-  createdAt: Date
-}
-
 export enum ChatState {
   WAITING = 'WAITING',
   IN_PROGRESS = 'IN_PROGRESS',
   FAILED = 'FAILED'
+}
+
+export interface Message {
+  role: string
+  text: string
+  createdAt: Date
 }
 
 export class Chat {

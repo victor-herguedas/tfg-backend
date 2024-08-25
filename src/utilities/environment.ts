@@ -77,3 +77,7 @@ export const GENERATE_IMAGE_PROMPT = generateImagePrompt
 const extractTodosPrompt = process.env.EXTRACT_TODOS_PROMPT
 if (extractTodosPrompt === undefined) throw new Error(envExceptionError('EXTRACT_TODOS_PROMPT'))
 export const EXTRACT_TODOS_PROMPT = extractTodosPrompt
+
+const registerCode = process.env.REGISTER_CODE
+if (registerCode === undefined) throw new Error(envExceptionError('REGISTER_CODE'))
+export const REGISTER_CODE = registerCode

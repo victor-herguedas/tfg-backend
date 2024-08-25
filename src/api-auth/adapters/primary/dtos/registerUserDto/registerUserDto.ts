@@ -6,18 +6,21 @@ export class RegisterUserDto {
   email: string
   password: string
   name: string
+  registerCode: string
 
-  constructor (email: string, password: string, name: string) {
+  constructor (email: string, password: string, name: string, registerCode: string) {
     this.email = email
     this.password = password
     this.name = name
+    this.registerCode = registerCode
   }
 }
 
 const schema = vine.object({
   email: vine.string().trim().email().toLowerCase(),
   password: vine.string().trim().minLength(6).maxLength(30),
-  name: vine.string().trim().minLength(1)
+  name: vine.string().trim().minLength(1),
+  registerCode: vine.string().trim().minLength(1)
 })
 
 export const getRegisterUserDto = async (req: Request): Promise<RegisterUserDto> => {

@@ -5,13 +5,13 @@ import app from '../../../../index.js'
 import { restartDatabase } from '../../../../utilities/test/testUtils.js'
 import { decodeAuthToken } from '../../../domain/services/securityService/securityService.js'
 import { findUserByEmail } from '../../secundary/repositorys/UserRepository.js'
+import { REGISTER_CODE } from '../../../../utilities/environment.js'
+import { register } from 'module'
 
 describe('POST /auth/register ', () => {
   beforeEach(async () => {
     await restartDatabase()
   })
-
-  test.skip('should create an account and then login', () => {})
 
   test('should return validation error with the field if no correct fields', async () => {
     const res = await req(app)
@@ -33,7 +33,8 @@ describe('POST /auth/register ', () => {
       .send({
         email,
         password: '123456',
-        name: 'Victor'
+        name: 'Victor',
+        registerCode: REGISTER_CODE
       })
     expect(res.status === 201).toBeTruthy()
     const resHeadder = res.header['set-cookie'][0]
@@ -54,10 +55,24 @@ describe('POST /auth/register ', () => {
       .send({
         email: 'exist@test.com',
         password: '123456',
-        name: 'Victor'
+        name: 'Victor',
+        registerCode: REGISTER_CODE
       })
 
     expect(res.status === 400).toBeTruthy()
+  })
+
+  test('should return 401 if wrong register code on register', async () => {
+    const res = await req(app)
+      .post('/auth/register')
+      .send({
+        email: 'notExist@test.com',
+        password: '123456',
+        name: 'Victor',
+        registerCode: 'wrongCode'
+      })
+
+    expect(res.status).toBe(401)
   })
 })
 
