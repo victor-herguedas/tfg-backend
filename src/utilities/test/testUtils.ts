@@ -99,6 +99,42 @@ const populate = async (): Promise<void> => {
     createdAt: new Date('2002-06-22')
   }).save()
 
+  // Meeting with todos
+  await new MeetingEntity({
+    _id: new mongoose.Types.ObjectId('66cecb3e0cdccf15165cce32'),
+    userId: user1._id,
+    name: 'Meeting with todos',
+    transcription: 'This is a transcription',
+    transcriptionState: TranscriptionState.COMPLETED,
+    summary: 'This is a short description',
+    summaryState: SummaryState.COMPLETED,
+    summaryCreatedAt: new Date('2002-06-24'),
+    imageName: null,
+    imageUrl: null,
+    imageState: ImageState.COMPLETED,
+    imageCreatedAt: null,
+    todosState: TodosState.COMPLETED,
+    todos: [
+      {
+        id: '66cf6e7d34251e0764139799',
+        todo: 'Investigar las causas del calentamiento global',
+        done: false
+      },
+      {
+        id: '66cf6e86f765d75207756ddd',
+        todo: 'Revisar datos de temperatura y dióxido de carbono de los últimos 150 años',
+        done: false
+      },
+      {
+        id: '66cf6e91126ce3cfd34323ed',
+        todo: 'Ampliar la ventana temporal en los estudios de temperatura y dióxido de carbono',
+        done: false
+      }
+    ],
+    meetingDate: new Date('2002-06-22'),
+    createdAt: new Date('2002-06-22')
+  }).save()
+
   const chatId = '66620b847bda704c123cda07'
   await new ChatEntity({
     _id: new mongoose.Types.ObjectId(chatId),
