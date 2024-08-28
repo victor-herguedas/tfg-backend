@@ -1,14 +1,160 @@
-openapi: '3.0.3'
+openapi: "3.0.3"
 info:
   title: TFG Backend
-  version: '1.0'
+  version: "1.0"
+servers:
+  - url: http://localhost:3020
+    description: LocalHost
+
+components:
+  schemas:
+    meeting:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "60d3b41b7f7b3b0015f3b3b1"
+        userId:
+          type: string
+          example: "60d3b41b7f7b3b0015f3b3b1"
+        name:
+          type: string
+          example: "Daily meeting"
+        transcription:
+          type: string
+          example: "This is a transcription for a meeting"
+        transcriptionState:
+          $ref: "#/components/schemas/transcriptionState"
+        summary:
+          type: string
+          example: "This is a summary for a meeting"
+        summaryState:
+          $ref: "#/components/schemas/summaryState"
+        summayCreatedAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        imageName:
+          type: string
+          example: "image.png"
+        imageUrl:
+          type: string
+          example: "http://localhost:3020/images/image.png"
+        imageState:
+          $ref: "#/components/schemas/imageState"
+        imageCreatedAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        todos:
+          type: array
+          items:
+            $ref: "#/components/schemas/todo"
+        todosState:
+          $ref: "#/components/schemas/todosState"
+        todosCreatedAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        meetingDate:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        createdAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+
+    transcriptionState:
+      type: object
+      properties:
+        transcriptionState:
+          description: "State of the transcription"
+          enum: ["COMPLETED", "IN_PROGRESS", "FAILED"]
+          example: "COMPLETED"
+    summaryState:
+      type: object
+      properties:
+        summaryState:
+          description: "State of the summary"
+          enum: ["WAITING", "COMPLETED", "IN_PROGRESS", "FAILED"]
+          example: "COMPLETED"
+    imageState:
+      type: object
+      properties:
+        imageState:
+          description: "State of the image"
+          enum: ["WAITING", "COMPLETED", "IN_PROGRESS", "FAILED"]
+          example: "COMPLETED"
+
+    todo:
+      type: object
+      properties:
+        todoId:
+          type: object
+          properties:
+            todoId:
+              type: string
+              example: "60d3b41b7f7b3b0015f3b3b1"
+            todo:
+              type: string
+              example: "Do the homework"
+            completed:
+              type: boolean
+              example: true
+      
+    todosState:
+      type: object
+      properties:
+        todosState:
+          description: "State of the todos"
+          enum: ["WAITING", "COMPLETED", "IN_PROGRESS", "FAILED"]
+          example: "COMPLETED"
+
+    chat:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "60d3b41b7f7b3b0015f3b3b1"
+        meetingId:
+          type: string
+          example: "60d3b41b7f7b3b0015f3b3b1"
+        chatState:
+          $ref: "#/components/schemas/chatState"
+        createdAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        updatedAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/message"
+
+    chatState:
+      type: object
+      properties:
+        chatState:
+          description: "State of the chat"
+          enum: ["WAITING", "IN_PROGRESS", "FAILED"]
+          example: "COMPLETED"
+
+    message:
+      type: object
+      properties:
+        role:
+          enum: ["system", "user"]
+          example: "system"
+        text:
+          type: string
+          example: "Hello, how are you?"
+        createdAt:
+          type: string
+          example: "2022-06-22T12:00:00Z"
 
 paths:
   /auth/register:
-    post: 
+    post:
       tags:
         - auth
-      description: 'Use this endpoint to register a new user.'
+      description: "Use this endpoint to register a new user."
       requestBody:
         required: true
         content:
@@ -18,33 +164,33 @@ paths:
               properties:
                 name:
                   type: string
-                  example: 'Victor Herguedas'
+                  example: "Victor Herguedas"
                 email:
                   type: string
-                  example: 'victor22junio@gmail.com'
+                  example: "victor22junio@gmail.com"
                 password:
                   type: string
-                  example: '123456'
+                  example: "123456"
                 registerCode:
                   type: string
-                  example: '123456'
+                  example: "123456"
       responses:
-        '201':
+        "201":
           description: Created
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '409':
+        "409":
           description: Conflict
-        '500':
+        "500":
           description: Internal Server Error
 
   /atuh/login:
     post:
       tags:
         - auth
-      description: 'Use this endpoint to login.'
+      description: "Use this endpoint to login."
       requestBody:
         required: true
         content:
@@ -54,37 +200,36 @@ paths:
               properties:
                 email:
                   type: string
-                  example: 'victor22junio@gmail.com'
+                  example: "victor22junio@gmail.com"
                 password:
                   type: string
-                  example: '123456'
+                  example: "123456"
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
-  
+
   /auth/me:
     get:
       tags:
         - auth
-      description: 'Use this endpoint to get the user information.'
+      description: "Use this endpoint to get the user information."
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-
 
   /meetings:
     post:
       tags:
         - meetings
-      description: 'Use this endpoint to create a new meeting.'
+      description: "Use this endpoint to create a new meeting."
       requestBody:
         required: true
         content:
@@ -95,42 +240,52 @@ paths:
                 name:
                   type: string
                   description: Name of the meeting
-                  example: 'Daily meeting'
+                  example: "Daily meeting"
                 date:
                   type: string
                   description: Date in ISO 8601 format
-                  example: '2022-06-22T12:00:00Z'
+                  example: "2022-06-22T12:00:00Z"
                 audio:
                   type: string
                   format: binary
                   description: Audio file in MP3 format
                   example: null
       responses:
-        '201':
+        "201":
           description: Created
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/meeting"
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
     get:
       tags:
         - meetings
-      description: 'Use this endpoint to get all your meetings.'
+      description: "Use this endpoint to get all your meetings."
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/meeting"
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
 
   /meetings/{meetingId}:
     get:
       tags:
         - meetings
-      description: 'Use this endpoint to get the meeting information.'
+      description: "Use this endpoint to get the meeting information."
       parameters:
         - name: meetingId
           in: path
@@ -138,21 +293,25 @@ paths:
           description: ID of the meeting
           schema:
             type: string
-            example: '60d3b41b7f7b3b0015f3b3b1'
+            example: "60d3b41b7f7b3b0015f3b3b1"
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/meeting"
+        "401":
           description: Unauthorized
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
 
     delete:
       tags:
         - meetings
-      description: 'Use this endpoint to delete the meeting.'
+      description: "Use this endpoint to delete the meeting."
       parameters:
         - name: meetingId
           in: path
@@ -160,22 +319,22 @@ paths:
           description: ID of the meeting
           schema:
             type: string
-            example: '60d3b41b7f7b3b0015f3b3b1'
+            example: "60d3b41b7f7b3b0015f3b3b1"
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-  
+
   /meetings/{meetingId}/chats:
     post:
       tags:
         - chats
-      description: 'Use this endpoint to create a new chat message.'
+      description: "Use this endpoint to create a new chat message."
       parameters:
         - name: meetingId
           in: path
@@ -183,7 +342,7 @@ paths:
           description: ID of the meeting
           schema:
             type: string
-            example: '60d3b41b7f7b3b0015f3b3b1'
+            example: "60d3b41b7f7b3b0015f3b3b1"
       requestBody:
         required: true
         content:
@@ -193,16 +352,132 @@ paths:
               properties:
                 message:
                   type: string
-                  example: 'Hello, how are you?'
+                  example: "Hello, how are you?"
       responses:
-        '201':
+        "201":
           description: Created
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/chat"
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
+          description: Internal Server Error
+  /meetings/{meetingId}/chats/{chatId}:
+    put:
+      tags:
+        - chats
+      description: "Use it to add a new question to the chat"
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: "60d3b41b7f7b3b0015f3b3b1"
+        - name: chatId
+          in: path
+          required: true
+          description: ID of the chat
+          schema:
+            type: string
+            example: "60d3b41b7f7b3b0015f3b3b1"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  example: "What is the main topic of the meeting?"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/chat"
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+    get:
+      tags:
+        - chats
+      description: "Use this endpoint to get all the chat messages."
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: "60d3b41b7f7b3b0015f3b3b1"
+        - name: chatId
+          in: path
+          required: true
+          description: ID of the chat
+          schema:
+            type: string
+            example: "60d3b41b7f7b3b0015f3b3b1"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/chat"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
           description: Internal Server Error
 
+  /meetings/{meetingId}/todos:
+    put:
+      tags:
+        - todos
+      description: "Use this endpoint to edit todos."
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: "60d3b41b7f7b3b0015f3b3b1"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/todo"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
