@@ -1,0 +1,208 @@
+openapi: '3.0.3'
+info:
+  title: TFG Backend
+  version: '1.0'
+
+paths:
+  /auth/register:
+    post: 
+      tags:
+        - auth
+      description: 'Use this endpoint to register a new user.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 'Victor Herguedas'
+                email:
+                  type: string
+                  example: 'victor22junio@gmail.com'
+                password:
+                  type: string
+                  example: '123456'
+                registerCode:
+                  type: string
+                  example: '123456'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '409':
+          description: Conflict
+        '500':
+          description: Internal Server Error
+
+  /atuh/login:
+    post:
+      tags:
+        - auth
+      description: 'Use this endpoint to login.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 'victor22junio@gmail.com'
+                password:
+                  type: string
+                  example: '123456'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  
+  /auth/me:
+    get:
+      tags:
+        - auth
+      description: 'Use this endpoint to get the user information.'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+
+
+  /meetings:
+    post:
+      tags:
+        - meetings
+      description: 'Use this endpoint to create a new meeting.'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the meeting
+                  example: 'Daily meeting'
+                date:
+                  type: string
+                  description: Date in ISO 8601 format
+                  example: '2022-06-22T12:00:00Z'
+                audio:
+                  type: string
+                  format: binary
+                  description: Audio file in MP3 format
+                  example: null
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+    get:
+      tags:
+        - meetings
+      description: 'Use this endpoint to get all your meetings.'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /meetings/{meetingId}:
+    get:
+      tags:
+        - meetings
+      description: 'Use this endpoint to get the meeting information.'
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: '60d3b41b7f7b3b0015f3b3b1'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - meetings
+      description: 'Use this endpoint to delete the meeting.'
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: '60d3b41b7f7b3b0015f3b3b1'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  
+  /meetings/{meetingId}/chats:
+    post:
+      tags:
+        - chats
+      description: 'Use this endpoint to create a new chat message.'
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: ID of the meeting
+          schema:
+            type: string
+            example: '60d3b41b7f7b3b0015f3b3b1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Hello, how are you?'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
