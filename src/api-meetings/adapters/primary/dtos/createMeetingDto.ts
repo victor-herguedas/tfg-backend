@@ -2,6 +2,7 @@ import { type Request } from 'express'
 import { getAudioAndFieldsFromFromRequest, type FormFile } from '../../../../utilities/serializations/audioSerialization.js'
 import vine, { errors } from '@vinejs/vine'
 import { ValidationError, getValidationErrorMessage } from '../../../../utilities/errors/ValidationError/ValidationError.js'
+import { DateTime } from 'luxon'
 
 export class CreateMeetingDto {
   name: string
@@ -26,7 +27,9 @@ export const getCreateMeetingDto = async (req: Request): Promise<CreateMeetingDt
     Object.keys(fields as unknown as Record<string, string[]>).forEach((key: string) => {
       fields[key] = fields[key][0]
     })
-    const validatedCreateMeetingData = await vine.validate({ schema, data: fields })
+
+    const formatedDate = DateTime.fromISO(fields.date as unknown as string).toFormat('yyyy-MM-dd HH:mm:ss')
+    const validatedCreateMeetingData = await vine.validate({ schema, data: { ...fields, date: formatedDate } })
     return new CreateMeetingDto(validatedCreateMeetingData.name, validatedCreateMeetingData.date, audio)
   } catch (error) {
     if (error instanceof errors.E_VALIDATION_ERROR) {
