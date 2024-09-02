@@ -1,6 +1,6 @@
 import express from 'express'
 import chalk from 'chalk'
-import { SERVER_PORT } from './utilities/environment.js'
+import { CORS_ALLOWED_ORIGINS, SERVER_PORT } from './utilities/environment.js'
 import { authRoutes } from './api-auth/adapters/primary/routes/authRoutes.js'
 import bodyParser from 'body-parser'
 import { meetingsRoutes } from './api-meetings/adapters/primary/routes/meetingsRoutes.js'
@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: CORS_ALLOWED_ORIGINS,
   credentials: true,
   optionsSuccessStatus: 200
 }

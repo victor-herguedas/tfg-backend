@@ -81,3 +81,7 @@ export const EXTRACT_TODOS_PROMPT = extractTodosPrompt
 const registerCode = process.env.REGISTER_CODE
 if (registerCode === undefined) throw new Error(envExceptionError('REGISTER_CODE'))
 export const REGISTER_CODE = registerCode
+
+const corsAllowedOrigins = process.env.CORS_ALLOWED_ORIGINS
+if (corsAllowedOrigins === undefined) throw new Error(envExceptionError('CORS_ALLOWED_ORIGINS'))
+export const CORS_ALLOWED_ORIGINS = corsAllowedOrigins.split(',').map((origin) => origin.trim())
