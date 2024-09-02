@@ -10,7 +10,7 @@ export const registerPost = async (req: Request, res: Response, next: NextFuncti
     const user = await createNewUserHandler(RegisterUserDto)
 
     const token = user.getAuthToken()
-    res.cookie('JWT', token, { httpOnly: true, secure: true })
+    res.cookie('JWT', token, { httpOnly: true, secure: false })
 
     res.status(201).json({ message: 'User created' })
   } catch (error) {
@@ -24,7 +24,7 @@ export const loginPost = async (req: Request, res: Response, next: NextFunction)
     const user = await logInUserHandler(LoginUserDto)
 
     const token = user.getAuthToken()
-    res.cookie('JWT', token, { httpOnly: true, secure: true })
+    res.cookie('JWT', token, { httpOnly: true, secure: false })
 
     res.status(200).json({ message: 'loggin successfully' })
   } catch (error) {
